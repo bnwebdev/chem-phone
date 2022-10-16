@@ -1,0 +1,9 @@
+{
+  "name": "@app/module-client",
+  "version": "1.0.0",
+  "private": true,
+  "prefab": "modules/module/client",
+  "dependencies": {
+    "@app/module-common": "^1.0.0"
+  }
+}

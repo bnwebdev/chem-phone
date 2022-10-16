@@ -2,12 +2,16 @@
   "name": "chem-phone",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "modules/**/*"
   ],
   "devDependencies": {
     "lerna": "^6.0.1"
   },
   "scripts": {
     "dev": "lerna run --scope='{server,client}' --parallel start:dev --stream"
+  },
+  "dependencies": {
+    "i18next": "^21.10.0"
   }
 }
