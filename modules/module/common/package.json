@@ -1,0 +1,9 @@
+{
+  "name": "@app/module-common",
+  "prefab": "modules/module/common",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "fractal-objects": "^0.10.4"
+  }
+}
