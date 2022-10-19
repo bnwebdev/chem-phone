@@ -9,7 +9,8 @@
     "lerna": "^6.0.1"
   },
   "scripts": {
-    "dev": "lerna run --scope='{server,client}' --parallel start:dev --stream"
+    "dev": "lerna run --scope='{server,client}' --parallel start:dev --stream",
+    "bootstrap": "lerna bootstrap"
   },
   "dependencies": {
     "i18next": "^21.10.0"
