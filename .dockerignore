@@ -7,8 +7,11 @@
 
 # Directories
 node_modules
+packages/**/node_modules
+.git
 
 # Files
+Dockerfile
 .npmrc
 
 # Type of files
