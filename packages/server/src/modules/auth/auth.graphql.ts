@@ -1,29 +1,30 @@
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { AppGraphhQLContext } from 'src/app.types';
 import { UserEntity } from '../user/user.entity';
 import { AUTH_TOKEN_NAME } from './auth.constants';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto';
+import { IdentityObject } from './graphql/identity.object';
 
-@Controller('auth')
-export class AuthController {
+@Resolver()
+export class AuthResolver {
   constructor(private authService: AuthService) {}
 
-  @Post('login')
+  @Query(() => Boolean)
   async login(
-    @Body() { username, password }: LoginDto,
-    @Res({ passthrough: true }) res,
+    @Args('input') { username, password }: LoginDto,
+    @Context() context: AppGraphhQLContext,
   ) {
     const user = await this.authService.login(username, password);
     const { authToken } = this.authService.generateTokens(user);
 
-    res.cookie(AUTH_TOKEN_NAME, authToken, { httpOnly: true });
+    context.res.cookie(AUTH_TOKEN_NAME, authToken, { httpOnly: true });
 
     return true;
   }
 
-  @Post('register')
-  async register(@Body() { username, password, confirm }: RegisterDto) {
+  @Mutation(() => Boolean)
+  async register(@Args('input') { username, password, confirm }: RegisterDto) {
     if (password !== confirm) {
       throw new Error(`Password isn't equal to confirm`);
     }
@@ -33,16 +34,14 @@ export class AuthController {
     return true;
   }
 
-  @Get('identity')
-  identity(@Req() req: Request & { user: UserEntity }) {
+  @Query(() => IdentityObject, { nullable: true })
+  identity(@Context() { req }: AppGraphhQLContext<{ user: UserEntity }>) {
     if (!req.user) {
       return null;
     }
 
     return {
       username: req.user.username,
-      createdAt: req.user.createdAt,
-      updatedAt: req.user.updatedAt,
     };
   }
 }

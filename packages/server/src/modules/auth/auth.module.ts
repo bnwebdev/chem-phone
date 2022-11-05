@@ -1,13 +1,12 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AuthMiddleware } from './auth.middleware';
-import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
+import { AuthResolver } from './auth.graphql';
 
 @Module({
   imports: [UserModule],
-  controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, AuthResolver],
 })
 export class AuthModule {
   configure(consumer: MiddlewareConsumer) {
