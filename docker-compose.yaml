@@ -6,7 +6,7 @@ services:
         restart: always
         environment:
             - POSTGRES_PASSWORD=password
-            - POSTGRES_DB=password
+            - POSTGRES_DB=postgres
             - POSTGRES_USER=postgres
         ports:
             - "5432:5432"
@@ -28,10 +28,10 @@ services:
         environment:
             - DATABASE_HOST=chem-phone-db
         volumes:
-            - ./:/app
-            - /app/node_modules
-            - /app/packages/client/node_modules
-            - /app/packages/server/node_modules
+            - ./:/home/app
+            - /home/app/node_modules
+            - /home/app/packages/client/node_modules
+            - /home/app/packages/server/node_modules
     cache:
         container_name: redis
         image: redis:7-alpine
