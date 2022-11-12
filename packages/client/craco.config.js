@@ -1,8 +1,6 @@
 const path = require('path');
 const { getLoader, loaderByName } = require("@craco/craco");
 
-// const modulenameRegex = new RegExp(`node_modules(?![\\\\/](@app)).*`);
-
 const packages = [];
 
 packages.push(path.join(__dirname, "../../modules"));

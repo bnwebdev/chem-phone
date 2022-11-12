@@ -1,0 +1,15 @@
+{
+  "name": "@app/core-client",
+  "version": "1.0.0",
+  "private": true,
+  "prefab": "modules/core/client",
+  "directory": "modules/core/client",
+  "dependencies": {
+    "@app/module-client": "^1.0.0",
+    "@app/module-common": "^1.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0"
+  }
+}
