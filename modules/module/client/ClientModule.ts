@@ -23,6 +23,10 @@ export interface ClientModuleShape extends CommonModuleShape {
 export interface ClientModule extends ClientModuleShape {}
 
 export class ClientModule extends CommonModule {
+    constructor(...modules: ClientModuleShape[]) {
+        super(...modules)
+    }
+
     get routes() {
         return (this.route || []).map((element, idx) => cloneElement(element, { key: element.key || idx }))
     }
