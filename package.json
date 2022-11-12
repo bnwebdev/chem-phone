@@ -5,18 +5,21 @@
     "packages/client",
     "packages/server",
     "modules/module/client",
-    "modules/module/common"
+    "modules/module/common",
+    "modules/core/client"
   ],
   "devDependencies": {
     "lerna": "^6.0.1"
   },
   "scripts": {
     "dev": "lerna run --scope='{server,client}' --parallel start:dev --stream",
-    "bootstrap": "lerna bootstrap --hoist"
+    "bootstrap": "lerna bootstrap --hoist",
+    "reinstall-deps": "rm -rf ./**/node_modules && npm install"
   },
   "dependencies": {
     "@app/module-client": "^1.0.0",
     "@app/module-common": "^1.0.0",
+    "@app/core-client": "^1.0.0",
     "i18next": "^21.10.0"
   }
 }

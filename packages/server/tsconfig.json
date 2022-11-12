@@ -16,16 +16,7 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "@common": ["./packages/common"],
-      "@client": ["./packages/client/src"],
-      "@client/*": ["./packages/client/src/*"],
-      "@server": ["./packages/server/src"],
-      "@server/*": ["./packages/server/src/*"],
-      "@root/*": ["./*"]
-      
-    }
+    "noFallthroughCasesInSwitch": false
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
