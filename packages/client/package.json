@@ -2,8 +2,20 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "main": "src",
   "dependencies": {
     "@app/module-client": "^1.0.0",
+    "@app/module-common": "^1.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.8.4",
+    "web-vitals": "^2.1.4"
+  },
+  "devDependencies": {
+    "@craco/craco": "^7.0.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -11,16 +23,12 @@
     "@types/node": "^16.11.66",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.8.4",
-    "web-vitals": "^2.1.4"
+    "@types/react-router-dom": "^5.3.3"
   },
   "scripts": {
-    "start:dev": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start:dev": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

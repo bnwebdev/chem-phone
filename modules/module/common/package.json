@@ -1,6 +1,7 @@
 {
   "name": "@app/module-common",
   "prefab": "modules/module/common",
+  "directory": "modules/module/common",
   "version": "1.0.0",
   "private": true,
   "dependencies": {

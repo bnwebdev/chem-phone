@@ -2,17 +2,21 @@
   "name": "chem-phone",
   "private": true,
   "workspaces": [
-    "packages/*",
-    "modules/**/*"
+    "packages/client",
+    "packages/server",
+    "modules/module/client",
+    "modules/module/common"
   ],
   "devDependencies": {
     "lerna": "^6.0.1"
   },
   "scripts": {
     "dev": "lerna run --scope='{server,client}' --parallel start:dev --stream",
-    "bootstrap": "lerna bootstrap"
+    "bootstrap": "lerna bootstrap --hoist"
   },
   "dependencies": {
+    "@app/module-client": "^1.0.0",
+    "@app/module-common": "^1.0.0",
     "i18next": "^21.10.0"
   }
 }
