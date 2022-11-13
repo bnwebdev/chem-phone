@@ -1,8 +1,10 @@
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Switch } from 'react-router-dom';
 
 import { ClientModule } from '@app/module-client';
 import { Module } from '@app/module-common';
+
+import App from './components/App';
+import './index.css'
 
 const onAppCreate = async (typeApprovedModules: Module) => {
     const modules = typeApprovedModules as ClientModule
@@ -11,13 +13,7 @@ const onAppCreate = async (typeApprovedModules: Module) => {
         document.getElementById('root') as HTMLElement
     );
 
-    root.render(
-        <BrowserRouter>
-            <Switch>
-                {modules.routes}
-            </Switch>
-        </BrowserRouter>
-    );
+    root.render(<App modules={modules} />);
 }
 
 export default new ClientModule({

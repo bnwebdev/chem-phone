@@ -1,0 +1,12 @@
+{
+  "name": "@app/i18n",
+  "version": "1.0.0",
+  "private": true,
+  "prefab": "modules/i18n",
+  "directory": "modules/i18n",
+  "dependencies": {
+    "@app/module-common": "^1.0.0",
+    "react": "^18.2.0",
+    "i18next": "^21.10.0"
+  }
+}

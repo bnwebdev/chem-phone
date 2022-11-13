@@ -6,7 +6,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 const bootstrap = async () => {
-  RootModule.createApp()
+  await RootModule.createApp()
 }
 
 bootstrap().catch(console.error)

@@ -8,4 +8,12 @@ export interface CommonModuleShape extends ModuleShape {
 
 export interface CommonModule extends CommonModuleShape {}
 
-export class CommonModule extends Module {}
+export class CommonModule extends Module {
+    constructor(...modules: CommonModuleShape[]) {
+        super(...modules)
+    }
+
+    get localizations() {
+        return this.localization || []
+    }
+}
