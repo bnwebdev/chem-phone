@@ -7,6 +7,7 @@
   "dependencies": {
     "@app/module-client": "^1.0.0",
     "@app/module-common": "^1.0.0",
+    "@app/i18n": "^1.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^5.2.0",
