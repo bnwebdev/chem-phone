@@ -2,6 +2,7 @@ import { FC, forwardRef } from "react";
 import { BrowserRouter, Switch, Link as RouterLink, LinkProps as RouterLinkProps } from 'react-router-dom';
 import { LinkProps } from '@mui/material/Link';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { Container } from '@mui/material';
 
 import { ClientModule } from "@app/module-client";
 
@@ -42,9 +43,11 @@ const App: FC<Props> = ({ modules }) => {
         <ThemeProvider theme={theme}>
             <BrowserRouter>
                 <NavBar leftItems={leftNavItems} rightItems={rightNavItems}></NavBar>
-                <Switch>
-                    {modules.routes}
-                </Switch>
+                <Container>
+                    <Switch>
+                        {modules.routes}
+                    </Switch>
+                </Container>
             </BrowserRouter>
         </ThemeProvider>
     )
