@@ -88,10 +88,10 @@ const NavBar: FC<Props> = ({ leftItems, rightItems }) => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {rightItems.concat(leftItems).map((item, idx, arr) => (<>
-                <AppSideNavLink item={item} key={item.label + `${idx}`} buttonProps={{onClick: handleCloseNavMenu}} hideModals={!Boolean(anchorElNav)}/>
-                {idx !== arr.length - 1 && <Divider />}
-              </>))}
+              {rightItems.concat(leftItems).map((item, idx, arr) => ([
+                <AppSideNavLink item={item} key={item.label + `${idx}`} buttonProps={{onClick: handleCloseNavMenu}} hideModals={!Boolean(anchorElNav)}/>,
+                idx !== arr.length - 1 && <Divider key={`divider-${idx}`}/>
+              ]))}
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -114,10 +114,7 @@ const NavBar: FC<Props> = ({ leftItems, rightItems }) => {
             CHEMPHONE
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {leftItems.map((item, idx) => (
-                <AppNavLink item={item} key={item.label + `${idx}`} />
-            ))}
-            {rightItems.map((item, idx) => (
+            {leftItems.concat(rightItems).map((item, idx) => (
                 <AppNavLink item={item} key={item.label + `${idx}`} />
             ))}
           </Box>

@@ -34,7 +34,7 @@ import configuration from './configuration';
       context: ({ req, res }) => ({ req, res }),
       cors: {
         credential: true,
-        origin: 'http://localhost:3001',
+        origin: 'http://localhost:3000',
       },
     }),
     AuthModule,
