@@ -1,7 +1,7 @@
-import {useMutation, gql} from '@apollo/client'
+import {gql, useLazyQuery} from '@apollo/client'
 
-const MUTATION = gql`
-    mutation Logout {
+const QUERY = gql`
+    query Logout {
         logout
     }
 `
@@ -12,7 +12,7 @@ type Payload = {
 
 
 export const useLogout = () => {
-    const [logout, {data, error, loading}] = useMutation<Payload>(MUTATION)
+    const [logout, {data, error, loading}] = useLazyQuery<Payload>(QUERY)
 
     return {
         logout,

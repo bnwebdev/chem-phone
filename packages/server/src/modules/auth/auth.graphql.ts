@@ -34,7 +34,7 @@ export class AuthResolver {
     return true;
   }
 
-  @Mutation(() => Boolean)
+  @Query(() => Boolean)
   async logout(@Context() context: AppGraphhQLContext) {
     context.res.cookie(AUTH_TOKEN_NAME, '', { httpOnly: true });
 
