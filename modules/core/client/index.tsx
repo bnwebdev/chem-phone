@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { ClientModule } from '@app/module-client';
 import { Module } from '@app/module-common';
 
-import App from './components/App';
+import App from './App';
 import './index.css'
 
 const onAppCreate = async (typeApprovedModules: Module) => {

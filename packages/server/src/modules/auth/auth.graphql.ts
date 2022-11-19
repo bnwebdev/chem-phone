@@ -34,6 +34,13 @@ export class AuthResolver {
     return true;
   }
 
+  @Query(() => Boolean)
+  async logout(@Context() context: AppGraphhQLContext) {
+    context.res.cookie(AUTH_TOKEN_NAME, '', { httpOnly: true });
+
+    return true;
+  }
+
   @Query(() => IdentityObject, { nullable: true })
   identity(@Context() { req }: AppGraphhQLContext<{ user: UserEntity }>) {
     if (!req.user) {

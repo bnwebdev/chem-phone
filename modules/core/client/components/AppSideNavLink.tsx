@@ -28,30 +28,30 @@ const AppSideNavLink: FC<Props> = ({ item, buttonProps, hideModals }) => {
         )
     }
 
-    return (<>
-        <MenuItem onClick={e => setAnchor(e.currentTarget)}>
+    return (
+        <MenuItem onClick={e => setAnchor(e.currentTarget)} key={item.label}>
             {i18n.t(item.label) as string}
+            <Menu
+                open={Boolean(anchor)}
+                anchorEl={anchor}
+                anchorOrigin={{
+                    vertical: 'center',
+                    horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+                onClose={() => setAnchor(null)}
+            >
+                {item.children.map((childItem, idx) => ([
+                    <AppSideNavLink key={childItem.label + `${idx}`} item={childItem} buttonProps={buttonProps} hideModals={hideModals || !Boolean(anchor)}/>,
+                    idx !== item.children.length -1 && <Divider key={`divider-${idx}`}/>
+                ]))}
+            </Menu>
         </MenuItem>
-        <Menu
-            open={Boolean(anchor)}
-            anchorEl={anchor}
-            anchorOrigin={{
-                vertical: 'center',
-                horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'center',
-            }}
-            onClose={() => setAnchor(null)}
-        >
-            {item.children.map((childItem, idx) => (<>
-                <AppSideNavLink item={childItem} buttonProps={buttonProps} hideModals={hideModals || !Boolean(anchor)}/>
-                {idx !== item.children.length -1 && <Divider />}
-            </>))}
-        </Menu>
-    </>)
+    )
 }
 
 export default AppSideNavLink;

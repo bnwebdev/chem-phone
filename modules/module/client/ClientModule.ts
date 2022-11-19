@@ -2,13 +2,16 @@ import { ReactElement, cloneElement } from "react"
 
 import CommonModule, { CommonModuleShape } from "@app/module-common";
 
-export interface SingleNavItem {
-    link: string
+export interface BaseNavItem {
     label: string
+    auth?: boolean
 }
 
-export interface DropdownNavItem {
-    label: string
+export interface SingleNavItem extends BaseNavItem {
+    link: string
+}
+
+export interface DropdownNavItem extends BaseNavItem {
     children: NavItem[]
 }
 
