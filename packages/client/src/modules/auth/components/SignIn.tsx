@@ -1,3 +1,4 @@
+import { useTranslation } from "@app/i18n";
 import { Button, FormControl, Grid, Input, InputLabel, Typography } from "@mui/material";
 import { FC, useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -13,12 +14,17 @@ const SignIn: FC = () => {
   const { login, loginLoading, loginError } = useLogin()
 
   const history = useHistory()
+  const i18n = useTranslation('auth')
 
   const { register, handleSubmit } = useForm<InputData>()
 
   const onSubmit = useCallback(async (input: InputData) => {
-    await login(input)
-    history.push('/')
+    const {error} = await login(input)
+
+    if (!error) {
+        history.push('/')
+        history.go(0)
+    }
   }, [login, history])
 
   return <form onSubmit={handleSubmit(onSubmit)}>
@@ -26,13 +32,13 @@ const SignIn: FC = () => {
         <Grid item xs={12} md={8} lg={6} container justifyContent="end">
             <Grid item xs={12} mb={3}>
                 <FormControl size="medium" fullWidth>
-                    <InputLabel htmlFor="my-input">Username</InputLabel>
+                    <InputLabel htmlFor="my-input">{i18n.t('signin.username') as string}</InputLabel>
                     <Input {...register('username', { required: true })} />
                 </FormControl>
             </Grid>
             <Grid item xs={12} mb={3}>
                 <FormControl size="medium" fullWidth>
-                    <InputLabel htmlFor="my-input">Password</InputLabel>
+                    <InputLabel htmlFor="my-input">{i18n.t('signin.password') as string}</InputLabel>
                     <Input type="password" {...register('password', { required: true })}/>
                 </FormControl>
             </Grid>
@@ -42,7 +48,7 @@ const SignIn: FC = () => {
                     fullWidth
                     type="submit"
                     disabled={loginLoading}
-                >Submit</Button>
+                >{i18n.t('signin.submit') as string}</Button>
             </Grid>
         </Grid>
     </Grid>

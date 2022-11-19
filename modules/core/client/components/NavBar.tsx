@@ -1,7 +1,6 @@
-import { FC, MouseEvent, useState } from "react";
+import { FC, MouseEvent, useMemo, useState } from "react";
 
 import { NavItem } from "@app/module-client";
-import { useTranslation } from "@app/i18n";
 
 import MenuIcon from '@mui/icons-material/Menu';;
 import {Divider, Tooltip, Avatar, Container, Menu, Typography, IconButton, Toolbar, Box, AppBar} from '@mui/material';
@@ -9,13 +8,30 @@ import AdbIcon from '@mui/icons-material/Adb';
 
 import AppNavLink from './AppNavLink'
 import AppSideNavLink from './AppSideNavLink'
+import { useIdentity } from "../../../../packages/client/src/modules/auth/graphql/queries";
 
 type Props = {
     leftItems: NavItem[]
     rightItems: NavItem[]
 }
 
-const NavBar: FC<Props> = ({ leftItems, rightItems }) => {
+const normalizeNavItems = (navItems: NavItem[], identityData?: { username: string }) => {
+  const plainNormalized = navItems.filter(({ auth }) => auth === undefined || !!identityData === auth)
+
+  const deepNormalized = plainNormalized.map((item) => {
+    if ('children' in item) {
+      item.children = normalizeNavItems(item.children, identityData)
+    }
+
+    return item;
+  })
+
+  return deepNormalized
+}
+
+const NavBar: FC<Props> = ({ leftItems: rawLeftItems, rightItems: rawRightItems }) => {
+  const { identityData, identityLoading } = useIdentity()
+
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -34,7 +50,12 @@ const NavBar: FC<Props> = ({ leftItems, rightItems }) => {
     setAnchorElUser(null);
   };
 
-  const i18n = useTranslation()
+  const leftItems = useMemo(() => normalizeNavItems(rawLeftItems, identityData), [identityData, rawLeftItems]) 
+  const rightItems = useMemo(() => normalizeNavItems(rawRightItems, identityData), [identityData, rawRightItems])
+  
+  if (identityLoading) {
+    return null
+  }
 
   return (
     <AppBar position="static">
@@ -88,7 +109,7 @@ const NavBar: FC<Props> = ({ leftItems, rightItems }) => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {rightItems.concat(leftItems).map((item, idx, arr) => ([
+              {leftItems.concat(rightItems).map((item, idx, arr) => ([
                 <AppSideNavLink item={item} key={item.label + `${idx}`} buttonProps={{onClick: handleCloseNavMenu}} hideModals={!Boolean(anchorElNav)}/>,
                 idx !== arr.length - 1 && <Divider key={`divider-${idx}`}/>
               ]))}

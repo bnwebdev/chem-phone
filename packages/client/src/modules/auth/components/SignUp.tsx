@@ -1,3 +1,4 @@
+import { useTranslation } from "@app/i18n";
 import { Button, FormControl, Grid, Input, InputLabel, Typography } from "@mui/material";
 import { FC, useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -13,12 +14,17 @@ type InputData = {
 const SignIn: FC = () => {
   const { register: signup, registerLoading, registerError } = useRegister()
   const history = useHistory()
+  const i18n = useTranslation('auth')
 
   const { register, handleSubmit } = useForm<InputData>()
 
   const onSubmit = useCallback(async (input: InputData) => {
-    await signup(input)
-    history.push('/signin')
+    const {errors} = await signup(input)
+
+    if (!errors) {
+        history.push('/signin')
+    }
+    
   }, [signup, history])
 
   return <form onSubmit={handleSubmit(onSubmit)}>
@@ -26,19 +32,19 @@ const SignIn: FC = () => {
         <Grid item xs={12} md={8} lg={6} container justifyContent="end">
             <Grid item xs={12} mb={3}>
                 <FormControl size="medium" fullWidth>
-                    <InputLabel htmlFor="my-input">Username</InputLabel>
+                    <InputLabel htmlFor="my-input">{i18n.t('signup.username') as string}</InputLabel>
                     <Input {...register('username', { required: true })} />
                 </FormControl>
             </Grid>
             <Grid item xs={12} mb={3}>
                 <FormControl size="medium" fullWidth>
-                    <InputLabel htmlFor="my-input">Password</InputLabel>
+                    <InputLabel htmlFor="my-input">{i18n.t('signup.password') as string}</InputLabel>
                     <Input type="password" {...register('password', { required: true })}/>
                 </FormControl>
             </Grid>
             <Grid item xs={12} mb={3}>
                 <FormControl size="medium" fullWidth>
-                    <InputLabel htmlFor="my-input">Confirm</InputLabel>
+                    <InputLabel htmlFor="my-input">{i18n.t('signup.confirm') as string}</InputLabel>
                     <Input type="password" {...register('confirm', { required: true })}/>
                 </FormControl>
             </Grid>
@@ -48,7 +54,7 @@ const SignIn: FC = () => {
                     fullWidth
                     type="submit"
                     disabled={registerLoading}
-                >Submit</Button>
+                >{i18n.t('signup.submit') as string}</Button>
             </Grid>
         </Grid>
     </Grid>

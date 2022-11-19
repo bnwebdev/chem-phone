@@ -39,7 +39,8 @@ const theme = createTheme({
 });
 
 const App: FC<Props> = ({ modules }) => {
-    const {leftNavItems, rightNavItems} = modules
+  const {leftNavItems, rightNavItems} = modules
+  
 
     return (
         <ApolloProvider client={client}>
