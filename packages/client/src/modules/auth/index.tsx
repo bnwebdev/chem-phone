@@ -1,5 +1,7 @@
 import { ClientModule } from "@app/module-client";
-import { Route } from "react-router";
+
+import { AuthRoute } from "./components";
+
 import Logout from "./components/Logout";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
@@ -7,9 +9,9 @@ import source from "./locale";
 
 export default new ClientModule({
   route: [
-    <Route path="/signin" component={SignIn} />,
-    <Route path="/signup" component={SignUp} />,
-    <Route path="/logout" component={Logout} />,
+    <AuthRoute auth={false} path="/signin" component={SignIn} />,
+    <AuthRoute auth={false} path="/signup" component={SignUp} />,
+    <AuthRoute auth={true} path="/logout" component={Logout} />,
   ],
   rightNavItem: [
     { label: 'auth:labels.signIn', link: "/signin", auth: false },

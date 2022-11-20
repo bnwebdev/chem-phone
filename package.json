@@ -7,7 +7,8 @@
     "modules/module/client",
     "modules/module/common",
     "modules/core/client",
-    "modules/i18n"
+    "modules/i18n",
+    "modules/method"
   ],
   "devDependencies": {
     "lerna": "^6.0.1"
