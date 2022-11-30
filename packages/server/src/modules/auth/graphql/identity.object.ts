@@ -4,4 +4,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 export class IdentityObject {
   @Field()
   username: string;
+
+  @Field()
+  id: number;
 }

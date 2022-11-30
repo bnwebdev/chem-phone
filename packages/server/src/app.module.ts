@@ -9,8 +9,12 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 
 import { UserEntity } from './modules/user/user.entity';
+import { AnalysisModule } from './modules/analysis/analysis.module';
+import { MethodModule } from './modules/method/method.module';
 
 import configuration from './configuration';
+import { AnalysisEntity } from './modules/analysis/analysis.entity';
+import { MethodEntity } from './modules/method/method.entity';
 
 @Module({
   imports: [
@@ -25,7 +29,7 @@ import configuration from './configuration';
         password: config.get<string>('database.password'),
         database: config.get<string>('database.name'),
         synchronize: true,
-        entities: [UserEntity],
+        entities: [UserEntity, AnalysisEntity, MethodEntity],
       }),
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -40,6 +44,8 @@ import configuration from './configuration';
     AuthModule,
     UserModule,
     CommonModule,
+    AnalysisModule,
+    MethodModule,
   ],
 })
 export class AppModule {}

@@ -19,6 +19,7 @@
     "reinstall-deps": "rm -rf ./**/node_modules && npm install"
   },
   "dependencies": {
+    "@app/method": "^1.0.0",
     "@app/module-client": "^1.0.0",
     "@app/module-common": "^1.0.0",
     "@app/core-client": "^1.0.0",

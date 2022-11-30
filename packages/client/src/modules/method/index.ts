@@ -9,7 +9,7 @@ export default new ClientModule(
         leftNavItem: [
             {
                 label: 'methods:labels.root',
-                auth: true,
+                // auth: true,
                 children: [
                     {
                         label: 'methods:labels.photoAnalysis',

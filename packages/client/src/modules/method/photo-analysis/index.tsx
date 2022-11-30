@@ -5,6 +5,6 @@ import PhotoAnalyzer from "./components/PhotoAnalyzer";
 
 export default new ClientModule({
     route: [
-        <AuthRoute auth path="/methods/photo-analysis" component={PhotoAnalyzer} />
+        <AuthRoute path="/methods/photo-analysis" component={PhotoAnalyzer} />
     ],
 })
