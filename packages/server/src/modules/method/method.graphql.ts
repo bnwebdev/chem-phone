@@ -22,7 +22,7 @@ export class MethodResolver {
 
   @Query(() => MethodEntity)
   async method(
-    @Args() { id }: MethodDto,
+    @Args('input') { id }: MethodDto,
     @Context() { req }: AppGraphhQLContext<{ user: UserEntity }>,
   ) {
     return MethodEntity.findOneBy({ userId: req.user.id, id });
@@ -30,7 +30,7 @@ export class MethodResolver {
 
   @Mutation(() => MethodEntity)
   async createMethod(
-    @Args() { type }: CreateMethodDto,
+    @Args('input') { type }: CreateMethodDto,
     @Context() { req }: AppGraphhQLContext<{ user: UserEntity }>,
   ) {
     const method = new MethodEntity();
@@ -44,7 +44,7 @@ export class MethodResolver {
 
   @Mutation(() => MethodEntity)
   async editMethod(
-    @Args() { data, id }: EditMethodDto,
+    @Args('input') { data, id }: EditMethodDto,
     @Context() { req }: AppGraphhQLContext<{ user: UserEntity }>,
   ) {
     const method = await MethodEntity.findOneByOrFail({
@@ -59,7 +59,7 @@ export class MethodResolver {
 
   @Mutation(() => MethodEntity)
   async archieveMethod(
-    @Args() { id }: ArchieveMethodDto,
+    @Args('input') { id }: ArchieveMethodDto,
     @Context() { req }: AppGraphhQLContext<{ user: UserEntity }>,
   ) {
     const method = await MethodEntity.findOneByOrFail({

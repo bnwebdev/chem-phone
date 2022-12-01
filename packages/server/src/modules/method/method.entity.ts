@@ -5,9 +5,10 @@ import { MethodType, MethodData, MethodStatus } from '@app/methods';
 import { CommonEntity } from '../common/common.entity';
 import { UserEntity } from '../user/user.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { MethodDataObject } from './grapgql/method-data.object';
 
 @Entity('method')
-@ObjectType()
+@ObjectType('Method')
 export class MethodEntity extends CommonEntity {
   @Field()
   @PrimaryGeneratedColumn('increment')
@@ -24,7 +25,7 @@ export class MethodEntity extends CommonEntity {
   @Column('int')
   type: MethodType;
 
-  @Field(() => Object)
+  @Field(() => MethodDataObject, { nullable: true })
   @Column('json', { nullable: true })
   data: MethodData;
 
