@@ -4,6 +4,7 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AppGraphhQLContext } from '../../app.types';
 import { UserEntity } from '../user/user.entity';
 import {
+  AllMethodsDto,
   ArchieveMethodDto,
   CreateMethodDto,
   EditMethodDto,
@@ -15,9 +16,13 @@ import { MethodEntity } from './method.entity';
 export class MethodResolver {
   @Query(() => [MethodEntity])
   async allMethods(
+    @Args('input') { filters }: AllMethodsDto,
     @Context() { req }: AppGraphhQLContext<{ user: UserEntity }>,
   ) {
-    return MethodEntity.findBy({ userId: req.user.id });
+    const whereClause =
+      typeof filters?.status === 'number' ? { status: filters.status } : {};
+
+    return MethodEntity.findBy({ userId: req.user.id, ...whereClause });
   }
 
   @Query(() => MethodEntity)
@@ -66,6 +71,10 @@ export class MethodResolver {
       userId: req.user.id,
       id,
     });
+
+    if (method.status === MethodStatus.DRAFT) {
+      return method.remove();
+    }
 
     method.status = MethodStatus.ARCHIEVED;
 

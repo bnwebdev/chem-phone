@@ -1,24 +1,27 @@
 import { FC } from "react";
-import { Redirect, Route, RouteProps } from "react-router";
+import { Route, RouteProps } from "react-router";
 
 import { useIdentity } from "../graphql/queries";
 
 type Props = RouteProps & {
-    auth?: boolean
-}
+  auth?: boolean;
+  to?: string;
+};
 
-const AuthRoute: FC<Props> = ({auth, ...props}) => {
-    const {identityData, identityLoading} = useIdentity()
+const AuthRoute: FC<Props> = ({ auth, path, to, ...props }) => {
+  const { identityData, identityLoading } = useIdentity();
 
-    if (identityLoading) {
-        return null
-    }
+  if (identityLoading) {
+    return null;
+  }
 
-    if (auth !== undefined && auth !== Boolean(identityData)) {
-        return <Redirect to="/404" />
-    }
+  const authCompare = auth === undefined ? true : auth;
 
-    return <Route {...props} />
-}
+  if (authCompare !== Boolean(identityData)) {
+    return null;
+  }
+
+  return <Route {...props} path={to || path} />;
+};
 
 export default AuthRoute;

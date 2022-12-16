@@ -32,4 +32,14 @@ export class MethodEntity extends CommonEntity {
   @Field(() => Number)
   @Column('int')
   status: MethodStatus;
+
+  @Field({ name: 'createdAt' })
+  protected get crAt(): Date {
+    return this.createdAt;
+  }
+
+  @Field({ name: 'updatedAt' })
+  protected get updAt(): Date {
+    return this.updatedAt;
+  }
 }

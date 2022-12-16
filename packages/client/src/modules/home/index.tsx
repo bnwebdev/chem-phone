@@ -1,7 +1,8 @@
 import { ClientModule } from "@app/module-client";
 import { Route } from "react-router";
-import Error404 from "./components/Error404";
+
+import Home from "./components/Home";
 
 export default new ClientModule({
-  route: [<Route path="*" component={Error404} />],
+  route: [<Route key="not-auth-index" path="/" exact component={Home} />],
 });

@@ -45,7 +45,7 @@ const CreateMethod: FC = () => {
 
   useEffect(() => {
     if (createMethodData) {
-      history.push(`/methods/${createMethodData.id}`);
+      history.push(`/method/${createMethodData.id}`);
     }
   }, [createMethodData, history]);
 
@@ -63,7 +63,7 @@ const CreateMethod: FC = () => {
                 name={"type"}
                 render={({ field: { onChange, value } }) => (
                   <Select onChange={onChange} value={value}>
-                    {[...METHOD_TYPES, 2].map((type) => (
+                    {METHOD_TYPES.map((type) => (
                       <MenuItem key={type} value={type}>
                         {i18n.t(`type.${type}`) as string}
                       </MenuItem>

@@ -1,7 +1,8 @@
 import { gql, useMutation } from "@apollo/client";
 import { useCallback } from "react";
 
-import { MethodData, MethodStatus, MethodType } from "@app/method";
+import { MethodType } from "@app/method";
+import { Method } from "../types";
 
 type Variables = {
   input: {
@@ -10,13 +11,7 @@ type Variables = {
 };
 
 type Payload = {
-  createMethod: {
-    id: number;
-    userId: number;
-    type: MethodType;
-    data: MethodData;
-    status: MethodStatus;
-  };
+  createMethod: Method;
 };
 
 const MUTATION = gql`

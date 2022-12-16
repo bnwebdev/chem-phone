@@ -9,6 +9,13 @@ const createPage = {
   },
 };
 
+const editPage = {
+  chooseCurveBuilder: "Choose curve builder and create calibration curve",
+  curveBuilder: {
+    rawData: "Use raw data",
+  },
+};
+
 const localization = {
   labels: {
     root: "Methods",
@@ -27,6 +34,7 @@ const localization = {
     [MethodStatus.ARCHIEVED]: "Archieved",
   },
   createPage,
+  editPage,
 };
 
 export default localization;
