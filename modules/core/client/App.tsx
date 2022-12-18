@@ -1,9 +1,14 @@
 import { FC, forwardRef } from "react";
-import { BrowserRouter, Switch, Link as RouterLink, LinkProps as RouterLinkProps } from 'react-router-dom';
-import { LinkProps } from '@mui/material/Link';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Container } from '@mui/material';
-import { ApolloProvider } from '@apollo/client'
+import {
+  BrowserRouter,
+  Switch,
+  Link as RouterLink,
+  LinkProps as RouterLinkProps,
+} from "react-router-dom";
+import { LinkProps } from "@mui/material/Link";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { Container } from "@mui/material";
+import { ApolloProvider } from "@apollo/client";
 
 import { ClientModule } from "@app/module-client";
 
@@ -11,12 +16,12 @@ import NavBar from "./components/NavBar";
 import { client } from "./graphql";
 
 type Props = {
-    modules: ClientModule
-}
+  modules: ClientModule;
+};
 
 const LinkBehavior = forwardRef<
   HTMLAnchorElement,
-  Omit<RouterLinkProps, 'to'> & { href: RouterLinkProps['to'] }
+  Omit<RouterLinkProps, "to"> & { href: RouterLinkProps["to"] }
 >((props, ref) => {
   const { href, ...other } = props;
   // Map href (MUI) -> to (react-router)
@@ -39,23 +44,20 @@ const theme = createTheme({
 });
 
 const App: FC<Props> = ({ modules }) => {
-  const {leftNavItems, rightNavItems} = modules
-  
+  const { leftNavItems, rightNavItems } = modules;
 
-    return (
-        <ApolloProvider client={client}>
-            <ThemeProvider theme={theme}>
-                <BrowserRouter>
-                    <NavBar leftItems={leftNavItems} rightItems={rightNavItems}></NavBar>
-                    <Container>
-                        <Switch>
-                            {modules.routes}
-                        </Switch>
-                    </Container>
-                </BrowserRouter>
-            </ThemeProvider>
-        </ApolloProvider>
-    )
-}
+  return (
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <NavBar leftItems={leftNavItems} rightItems={rightNavItems}></NavBar>
+          <Container>
+            <Switch>{modules.routes}</Switch>
+          </Container>
+        </BrowserRouter>
+      </ThemeProvider>
+    </ApolloProvider>
+  );
+};
 
 export default App;

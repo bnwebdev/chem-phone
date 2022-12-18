@@ -49,6 +49,7 @@ export class AuthResolver {
 
     return {
       username: req.user.username,
+      id: req.user.id,
     };
   }
 }
