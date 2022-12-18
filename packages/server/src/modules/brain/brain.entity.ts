@@ -1,17 +1,16 @@
 import * as brain from 'brain.js';
-import { AfterLoad, Column, OneToOne, PrimaryColumn } from 'typeorm';
+import { AfterLoad, Column, Entity, OneToOne, PrimaryColumn } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 import { MethodEntity } from '../method/method.entity';
+import { InputType, OutputType } from './brain.types';
 
-type InputType = [number, number, number, number];
-type OutputType = { concentration: number };
-
+@Entity('brain')
 export class BrainEntity extends CommonEntity {
   @PrimaryColumn('int4', { name: 'method_id' })
   methodId: number;
 
   @Column('json', { name: 'brain_text' })
-  public brainText: ReturnType<
+  public brainJson: ReturnType<
     brain.NeuralNetwork<InputType, OutputType>['toJSON']
   >;
 
@@ -20,7 +19,7 @@ export class BrainEntity extends CommonEntity {
   @AfterLoad()
   toBrain() {
     this.net = new brain.NeuralNetwork<InputType, OutputType>().fromJSON(
-      this.brainText,
+      this.brainJson,
     );
   }
 

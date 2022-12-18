@@ -5,12 +5,12 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 import { MethodType, MethodData, MethodStatus } from '@app/methods';
 
 import { CommonEntity } from '../common/common.entity';
 import { UserEntity } from '../user/user.entity';
-import { Field, ObjectType } from '@nestjs/graphql';
 import { MethodDataObject } from './grapgql/method-data.object';
 import { BrainEntity } from '../brain/brain.entity';
 
