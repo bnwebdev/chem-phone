@@ -5,6 +5,14 @@ const createPage = {
     type: {
       label: "Type",
     },
+    name: {
+      label: "Name",
+      placeholder: "Input name...",
+    },
+    description: {
+      label: "Description",
+      placeholder: "Input description...",
+    },
     submit: "Create Method",
   },
 };

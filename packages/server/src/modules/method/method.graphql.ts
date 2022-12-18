@@ -1,11 +1,13 @@
 import { MethodStatus } from '@app/methods';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { In, Not } from 'typeorm';
 
 import { AppGraphhQLContext } from '../../app.types';
 import { UserEntity } from '../user/user.entity';
 import {
   AllMethodsDto,
   ArchieveMethodDto,
+  CompleteMethodDto,
   CreateMethodDto,
   EditMethodDto,
   MethodDto,
@@ -35,12 +37,16 @@ export class MethodResolver {
 
   @Mutation(() => MethodEntity)
   async createMethod(
-    @Args('input') { type }: CreateMethodDto,
+    @Args('input') input: CreateMethodDto,
     @Context() { req }: AppGraphhQLContext<{ user: UserEntity }>,
   ) {
+    const { type, name, description } = input;
     const method = new MethodEntity();
 
     method.type = type;
+    method.name = name;
+    method.description = description;
+
     method.status = MethodStatus.DRAFT;
     method.userId = req.user.id;
 
@@ -55,11 +61,30 @@ export class MethodResolver {
     const method = await MethodEntity.findOneByOrFail({
       userId: req.user.id,
       id,
+      status: Not(In([MethodStatus.ARCHIEVED, MethodStatus.COMPLETED])),
     });
 
     method.data = data;
+    method.status = MethodStatus.EDITABLE;
 
     return method.save();
+  }
+
+  @Mutation(() => Boolean)
+  async completeMethod(
+    @Args('input') { id }: CompleteMethodDto,
+    @Context() { req }: AppGraphhQLContext<{ user: UserEntity }>,
+  ) {
+    const method = await MethodEntity.findOneByOrFail({
+      userId: req.user.id,
+      id,
+      status: MethodStatus.EDITABLE,
+    });
+
+    method.status = MethodStatus.COMPLETED;
+    await method.save();
+
+    return true;
   }
 
   @Mutation(() => MethodEntity)

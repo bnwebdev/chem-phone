@@ -73,6 +73,13 @@ const columns = (
     flex: 1,
   },
   {
+    field: "name",
+    headerName: "Name",
+    align: "center",
+    headerAlign: "center",
+    flex: 2,
+  },
+  {
     field: "createdAt",
     headerName: "Created At",
     flex: 4,

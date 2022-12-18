@@ -7,6 +7,8 @@ import { Method } from "../types";
 type Variables = {
   input: {
     type: MethodType;
+    name: string;
+    description?: string;
   };
 };
 
@@ -22,15 +24,11 @@ const MUTATION = gql`
       type
       data {
         curve {
-          concentration {
-            unit
-            value
-          }
-          color {
-            unit
-            value
-          }
+          concentration
+          color
         }
+        concentrationUnit
+        colorUnit
       }
       status
     }

@@ -7,17 +7,15 @@ const QUERY = gql`
       id
       userId
       type
+      name
+      description
       data {
         curve {
-          concentration {
-            unit
-            value
-          }
-          color {
-            unit
-            value
-          }
+          concentration
+          color
         }
+        concentrationUnit
+        colorUnit
       }
       status
     }
@@ -35,13 +33,17 @@ type Variables = {
 };
 
 export const useMethod = (id: number) => {
-  const { data, error, loading } = useQuery<Payload, Variables>(QUERY, {
-    variables: { input: { id } },
-  });
+  const { data, error, loading, refetch } = useQuery<Payload, Variables>(
+    QUERY,
+    {
+      variables: { input: { id } },
+    }
+  );
 
   return {
     methodData: data?.method,
     methodError: error,
     methodLoading: loading,
+    refetchMethod: refetch,
   };
 };

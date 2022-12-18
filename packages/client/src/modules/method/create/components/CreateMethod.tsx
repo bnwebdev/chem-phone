@@ -7,8 +7,10 @@ import {
   FormControl,
   FormLabel,
   Grid,
+  Input,
   MenuItem,
   Select,
+  TextareaAutosize,
 } from "@mui/material";
 
 import { MethodType } from "@app/method";
@@ -62,7 +64,7 @@ const CreateMethod: FC = () => {
                 control={control}
                 name={"type"}
                 render={({ field: { onChange, value } }) => (
-                  <Select onChange={onChange} value={value}>
+                  <Select onChange={onChange} value={value} required>
                     {METHOD_TYPES.map((type) => (
                       <MenuItem key={type} value={type}>
                         {i18n.t(`type.${type}`) as string}
@@ -71,6 +73,53 @@ const CreateMethod: FC = () => {
                   </Select>
                 )}
               />
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <FormControl fullWidth>
+              <FormLabel>
+                {i18n.t("createPage.form.name.label") as string}
+              </FormLabel>
+              <Controller
+                control={control}
+                name={"name"}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    required
+                    onChange={onChange}
+                    value={value}
+                    placeholder={
+                      i18n.t("createPage.form.name.placeholder") as string
+                    }
+                  />
+                )}
+              ></Controller>
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <FormControl fullWidth>
+              <FormLabel>
+                {i18n.t("createPage.form.description.label") as string}
+              </FormLabel>
+              <Controller
+                control={control}
+                name={"description"}
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <TextareaAutosize
+                      onChange={onChange}
+                      value={value}
+                      placeholder={
+                        i18n.t(
+                          "createPage.form.description.placeholder"
+                        ) as string
+                      }
+                      minRows={2}
+                      maxRows={10}
+                    ></TextareaAutosize>
+                  </>
+                )}
+              ></Controller>
             </FormControl>
           </Grid>
           <Grid item>

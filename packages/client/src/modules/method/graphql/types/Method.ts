@@ -8,4 +8,6 @@ export type Method = {
   status: MethodStatus;
   createdAt: Date;
   updatedAt: Date;
+  name: string;
+  description?: string;
 };

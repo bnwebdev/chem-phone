@@ -15,6 +15,14 @@ export class MethodEntity extends CommonEntity {
   id: number;
 
   @Field()
+  @Column('varchar')
+  name: string;
+
+  @Field({ nullable: true })
+  @Column('text', { nullable: true })
+  description: string;
+
+  @Field()
   @Column('int4', { name: 'user_id' })
   userId: number;
 

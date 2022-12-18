@@ -1,25 +1,14 @@
 import { MethodData } from '@app/methods/types';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { UnitValueObject } from './unit-value.object';
-
-@InputType('ColorInput')
-@ObjectType()
-export class ColorObject {
-  @Field(() => [Number])
-  value: [number, number, number, number];
-
-  @Field(() => String)
-  unit: 'rgba';
-}
 
 @InputType('PointInput')
 @ObjectType()
 export class PointObject {
-  @Field(() => UnitValueObject)
-  concentration: UnitValueObject;
+  @Field()
+  concentration: number;
 
-  @Field(() => ColorObject)
-  color: ColorObject;
+  @Field(() => [Number])
+  color: [number, number, number, number];
 }
 
 @InputType('MethodDataInput')
@@ -27,4 +16,10 @@ export class PointObject {
 export class MethodDataObject implements MethodData {
   @Field(() => [PointObject])
   curve: PointObject[];
+
+  @Field({ nullable: true })
+  concentrationUnit: string;
+
+  @Field({ nullable: true })
+  colorUnit: string;
 }

@@ -9,19 +9,17 @@ const QUERY = gql`
       id
       userId
       type
+      name
+      description
       createdAt
       updatedAt
       data {
         curve {
-          concentration {
-            unit
-            value
-          }
-          color {
-            unit
-            value
-          }
+          concentration
+          color
         }
+        concentrationUnit
+        colorUnit
       }
       status
     }

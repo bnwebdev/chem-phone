@@ -5,4 +5,10 @@ import { MethodType } from '@app/methods';
 export class CreateMethodDto {
   @Field(() => Number)
   type: MethodType;
+
+  @Field()
+  name: string;
+
+  @Field({ nullable: true })
+  description: string;
 }
