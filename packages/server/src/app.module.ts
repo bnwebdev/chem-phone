@@ -15,6 +15,7 @@ import { MethodModule } from './modules/method/method.module';
 import configuration from './configuration';
 import { AnalysisEntity } from './modules/analysis/analysis.entity';
 import { MethodEntity } from './modules/method/method.entity';
+import { BrainModule } from './modules/brain/brain.module';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { MethodEntity } from './modules/method/method.entity';
         password: config.get<string>('database.password'),
         database: config.get<string>('database.name'),
         synchronize: true,
-        entities: [UserEntity, AnalysisEntity, MethodEntity],
+        entities: [UserEntity, AnalysisEntity, MethodEntity, BrainModule],
       }),
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -46,6 +47,7 @@ import { MethodEntity } from './modules/method/method.entity';
     CommonModule,
     AnalysisModule,
     MethodModule,
+    BrainModule,
   ],
 })
 export class AppModule {}
