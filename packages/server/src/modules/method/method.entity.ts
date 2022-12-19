@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -13,6 +14,7 @@ import { CommonEntity } from '../common/common.entity';
 import { UserEntity } from '../user/user.entity';
 import { MethodDataObject } from './grapgql/method-data.object';
 import { BrainEntity } from '../brain/brain.entity';
+import { AnalysisEntity } from '../analysis/analysis.entity';
 
 @Entity('method')
 @ObjectType('Method')
@@ -60,4 +62,7 @@ export class MethodEntity extends CommonEntity {
 
   @OneToOne(() => BrainEntity, (brain) => brain.method)
   brain: BrainEntity;
+
+  @OneToMany(() => AnalysisEntity, (analysis) => analysis.method)
+  analyses: AnalysisEntity[];
 }
