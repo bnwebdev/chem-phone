@@ -13,6 +13,13 @@ const QUERY = gql`
       status
       createdAt
       updatedAt
+      details
+      data {
+        raw
+        result
+        resultUnit
+        color
+      }
     }
   }
 `;

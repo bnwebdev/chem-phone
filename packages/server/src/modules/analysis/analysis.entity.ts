@@ -5,6 +5,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 import { MethodEntity } from '../method/method.entity';
 import { UserEntity } from '../user/user.entity';
+import { AnalysisData } from './graphql/analysis-data';
 
 @Entity('analysis')
 @ObjectType('Analysis')
@@ -21,6 +22,10 @@ export class AnalysisEntity extends CommonEntity {
   @Column('varchar')
   name: string;
 
+  @Field({ nullable: true })
+  @Column('text', { nullable: true })
+  details?: string;
+
   @Field()
   @Column('int4', { name: 'method_id' })
   methodId: number;
@@ -28,6 +33,10 @@ export class AnalysisEntity extends CommonEntity {
   @Field()
   @Column('int4', { name: 'user_id' })
   userId: number;
+
+  @Field(() => [AnalysisData])
+  @Column('json', { default: [] })
+  data: AnalysisData[];
 
   @ManyToOne(() => UserEntity, (user) => user.analyses)
   user: UserEntity;

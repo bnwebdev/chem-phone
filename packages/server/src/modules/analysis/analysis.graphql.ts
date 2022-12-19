@@ -9,6 +9,7 @@ import {
   AnalysisDto,
   ArchieveAnalysisDto,
   CreateAnalysisDto,
+  UpdateAnalysisDataDto,
 } from './dto';
 
 @Resolver()
@@ -55,7 +56,7 @@ export class AnalysisResolver {
   @Mutation(() => AnalysisEntity)
   async createAnalysis(
     @Context() context: AppGraphhQLContext<{ user: UserEntity }>,
-    @Args('input') { name, methodId }: CreateAnalysisDto,
+    @Args('input') { name, methodId, details }: CreateAnalysisDto,
   ) {
     const {
       req: { user },
@@ -78,6 +79,7 @@ export class AnalysisResolver {
 
     analysis.userId = user.id;
     analysis.status = AnalysisStatus.DRAFT;
+    analysis.details = details;
 
     return analysis.save();
   }
@@ -101,6 +103,26 @@ export class AnalysisResolver {
     }
 
     analysis.status = AnalysisStatus.ARCHIEVED;
+
+    return analysis.save();
+  }
+
+  @Mutation(() => AnalysisEntity)
+  async updateAnalysisData(
+    @Context() context: AppGraphhQLContext<{ user: UserEntity }>,
+    @Args('input') { id, data }: UpdateAnalysisDataDto,
+  ) {
+    const {
+      req: { user },
+    } = context;
+
+    const analysis = await AnalysisEntity.findOneByOrFail({
+      status: AnalysisStatus.DRAFT,
+      userId: user.id,
+      id,
+    });
+
+    analysis.data = data;
 
     return analysis.save();
   }

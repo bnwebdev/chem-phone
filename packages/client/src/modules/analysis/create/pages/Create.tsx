@@ -3,11 +3,13 @@ import {
   Button,
   CircularProgress,
   FormControl,
+  FormLabel,
   Grid,
   Input,
   InputLabel,
   MenuItem,
   Select,
+  TextareaAutosize,
   Typography,
 } from "@mui/material";
 import { FC, useCallback, useMemo } from "react";
@@ -19,6 +21,7 @@ import { useCreateAnalysis } from "../../graphql/mutations";
 type InputData = {
   name: string;
   methodId: number;
+  details?: string;
 };
 
 const Create: FC = () => {
@@ -34,8 +37,12 @@ const Create: FC = () => {
   const { register, handleSubmit, control } = useForm<InputData>();
 
   const onSubmit = useCallback(
-    async ({ name, methodId }: InputData) => {
-      const { data, errors } = await createAnalysis({ name, methodId });
+    async ({ name, methodId, details }: InputData) => {
+      const { data, errors } = await createAnalysis({
+        name,
+        methodId,
+        details,
+      });
       if (!errors && data) {
         history.push(`/analysis/${data.createAnalysis.id}`);
       }
@@ -92,6 +99,21 @@ const Create: FC = () => {
         <FormControl fullWidth>
           <InputLabel>Analysis name</InputLabel>
           <Input {...register("name", { required: true })} />
+        </FormControl>
+        <FormControl fullWidth>
+          <FormLabel>Analysis details</FormLabel>
+          <Controller
+            control={control}
+            name={"details"}
+            render={({ field: { onChange, value } }) => (
+              <TextareaAutosize
+                onChange={onChange}
+                value={value}
+                minRows={2}
+                maxRows={10}
+              ></TextareaAutosize>
+            )}
+          ></Controller>
         </FormControl>
         <Button
           type="submit"

@@ -37,7 +37,7 @@ const columns: GridColDef[] = [
   },
 ];
 
-const CompletedMethod: FC = () => {
+const CompletedMethod: FC<{ readable?: boolean }> = ({ readable }) => {
   const { method } = useContext(MethodContext);
 
   const points = useMemo(
@@ -67,16 +67,18 @@ const CompletedMethod: FC = () => {
 
   return (
     <>
-      <Button
-        variant="contained"
-        disabled={createAnalysisLoading}
-        onClick={() => setCreateAnalysisOpen(true)}
-      >
-        {createAnalysisLoading && (
-          <CircularProgress size={20} color="inherit" />
-        )}
-        Create analysis
-      </Button>
+      {!readable && (
+        <Button
+          variant="contained"
+          disabled={createAnalysisLoading}
+          onClick={() => setCreateAnalysisOpen(true)}
+        >
+          {createAnalysisLoading && (
+            <CircularProgress size={20} color="inherit" />
+          )}
+          Create analysis
+        </Button>
+      )}
       {createAnalysisError && (
         <Typography color={"error"} variant="body1">
           {createAnalysisError.message}

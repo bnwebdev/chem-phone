@@ -7,4 +7,7 @@ export class CreateAnalysisDto {
 
   @Field()
   methodId: number;
+
+  @Field({ nullable: true })
+  details?: string;
 }

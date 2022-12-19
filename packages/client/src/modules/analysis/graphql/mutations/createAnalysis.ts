@@ -7,6 +7,7 @@ type Variables = {
   input: {
     name: string;
     methodId: number;
+    details?: string;
   };
 };
 
@@ -24,6 +25,7 @@ const MUTATION = gql`
       status
       createdAt
       updatedAt
+      details
     }
   }
 `;
