@@ -38,3 +38,9 @@ export type CalibrationCurveMethodData = {
 };
 
 export type MethodData = CalibrationCurveMethodData;
+
+export enum AnalysisStatus {
+  DRAFT,
+  COMPLETED,
+  ARCHIEVED,
+}

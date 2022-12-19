@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { FC, useContext, useMemo } from "react";
 import { MethodContext } from "../context";
@@ -31,14 +32,17 @@ const CompletedMethod: FC = () => {
   );
 
   return (
-    <DataGrid
-      autoHeight
-      rows={points}
-      columns={columns}
-      pageSize={10}
-      rowsPerPageOptions={[10]}
-      hideFooter
-    />
+    <>
+      <Button variant="contained">Create analysis</Button>
+      <DataGrid
+        autoHeight
+        rows={points}
+        columns={columns}
+        pageSize={10}
+        rowsPerPageOptions={[10]}
+        hideFooter
+      />
+    </>
   );
 };
 
