@@ -62,7 +62,7 @@ export class AnalysisResolver {
       status: MethodStatus.COMPLETED,
     });
 
-    if (user.id !== method.id) {
+    if (user.id !== method.userId) {
       throw new Error(
         `You has no rights to create analysis with current method`,
       );
@@ -74,6 +74,8 @@ export class AnalysisResolver {
 
     analysis.userId = user.id;
     analysis.status = AnalysisStatus.DRAFT;
+
+    return analysis.save();
   }
 
   @Mutation(() => AnalysisEntity)

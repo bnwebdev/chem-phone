@@ -2,25 +2,46 @@ import { MethodStatus } from "@app/method";
 import {
   Button,
   CircularProgress,
-  Container,
   FormControl,
   Grid,
   Input,
   InputLabel,
   MenuItem,
   Select,
-  Skeleton,
   Typography,
 } from "@mui/material";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useCallback, useMemo } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useHistory } from "react-router";
 import { useAllMethods } from "../../../method/graphql/queries";
+import { useCreateAnalysis } from "../../graphql/mutations";
+
+type InputData = {
+  name: string;
+  methodId: number;
+};
 
 const Create: FC = () => {
-  const createHandler = () => {};
+  const history = useHistory();
+
+  const { createAnalysis, createAnalysisLoading, createAnalysisError } =
+    useCreateAnalysis();
 
   const { allMethodsData, allMethodsError, allMethodsLoading } = useAllMethods({
     filters: { status: MethodStatus.COMPLETED },
   });
+
+  const { register, handleSubmit, control } = useForm<InputData>();
+
+  const onSubmit = useCallback(
+    async ({ name, methodId }: InputData) => {
+      const { data, errors } = await createAnalysis({ name, methodId });
+      if (!errors && data) {
+        history.push(`/analysis/${data.createAnalysis.id}`);
+      }
+    },
+    [history, createAnalysis]
+  );
 
   const selectItems = useMemo(
     () =>
@@ -30,8 +51,6 @@ const Create: FC = () => {
       })),
     [allMethodsData]
   );
-
-  const [selectedId, setSelectedId] = useState<number | string>("");
 
   if (allMethodsLoading) {
     return (
@@ -49,35 +68,48 @@ const Create: FC = () => {
     );
   }
 
-  if (!selectItems || selectItems.length === 0) {
-    return <h1>No data</h1>;
-  }
-
   return (
-    <Grid container direction={"column"} gap={3}>
-      <h1>Create Analysis</h1>
-      <FormControl fullWidth>
-        <InputLabel>Select method</InputLabel>
-        <Select
-          value={selectedId}
-          onChange={(e) => setSelectedId(e.target.value as number)}
-          required
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Grid container direction={"column"} gap={3}>
+        <h1>Create Analysis</h1>
+        <FormControl fullWidth>
+          <InputLabel>Select method</InputLabel>
+          <Controller
+            control={control}
+            name={"methodId"}
+            rules={{ required: true }}
+            render={({ field: { onChange, value } }) => (
+              <Select value={value} onChange={onChange} required>
+                {selectItems?.map(({ id, name }) => (
+                  <MenuItem key={id} value={id}>
+                    {name}#{id}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          />
+        </FormControl>
+        <FormControl fullWidth>
+          <InputLabel>Analysis name</InputLabel>
+          <Input {...register("name", { required: true })} />
+        </FormControl>
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={!selectItems?.length || createAnalysisLoading}
         >
-          {selectItems.map(({ id, name }) => (
-            <MenuItem key={id} value={id}>
-              {name}#{id}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <FormControl fullWidth>
-        <InputLabel>Analysis name</InputLabel>
-        <Input />
-      </FormControl>
-      <Button type="submit" variant="contained">
-        Create analysis
-      </Button>
-    </Grid>
+          {createAnalysisLoading && (
+            <CircularProgress color="inherit" size={20} />
+          )}
+          Create analysis
+        </Button>
+        {createAnalysisError && (
+          <Typography color="error" variant="body1">
+            {createAnalysisError.message}
+          </Typography>
+        )}
+      </Grid>
+    </form>
   );
 };
 

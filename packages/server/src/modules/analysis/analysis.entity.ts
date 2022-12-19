@@ -34,4 +34,14 @@ export class AnalysisEntity extends CommonEntity {
 
   @ManyToOne(() => MethodEntity, (method) => method.analyses)
   method: MethodEntity;
+
+  @Field({ name: 'createdAt' })
+  protected get crAt(): Date {
+    return this.createdAt;
+  }
+
+  @Field({ name: 'updatedAt' })
+  protected get updAt(): Date {
+    return this.updatedAt;
+  }
 }
