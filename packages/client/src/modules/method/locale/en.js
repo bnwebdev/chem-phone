@@ -34,6 +34,8 @@ const localization = {
   },
   type: {
     [MethodType.CALIBRATION_CURVE]: "Calibration curve",
+    [MethodType.CALIBRATION_CURVE_ABSOLUTE]:
+      "Calibration curve with absolute values",
   },
   status: {
     [MethodStatus.DRAFT]: "Draft",

@@ -32,11 +32,12 @@ type Variables = {
   };
 };
 
-export const useMethod = (id: number) => {
+export const useMethod = (id: number, skip = false) => {
   const { data, error, loading, refetch } = useQuery<Payload, Variables>(
     QUERY,
     {
       variables: { input: { id } },
+      skip,
     }
   );
 

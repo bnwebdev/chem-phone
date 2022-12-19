@@ -3,6 +3,7 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { In, Not } from 'typeorm';
 
 import { AppGraphhQLContext } from '../../app.types';
+import { BrainService } from '../brain/brain.service';
 import { UserEntity } from '../user/user.entity';
 import {
   AllMethodsDto,
@@ -16,6 +17,8 @@ import { MethodEntity } from './method.entity';
 
 @Resolver()
 export class MethodResolver {
+  constructor(private brainService: BrainService) {}
+
   @Query(() => [MethodEntity])
   async allMethods(
     @Args('input') { filters }: AllMethodsDto,
@@ -75,14 +78,16 @@ export class MethodResolver {
     @Args('input') { id }: CompleteMethodDto,
     @Context() { req }: AppGraphhQLContext<{ user: UserEntity }>,
   ) {
-    const method = await MethodEntity.findOneByOrFail({
+    let method = await MethodEntity.findOneByOrFail({
       userId: req.user.id,
       id,
       status: MethodStatus.EDITABLE,
     });
 
     method.status = MethodStatus.COMPLETED;
-    await method.save();
+
+    method = await method.save();
+    await this.brainService.createBrain(method);
 
     return true;
   }
@@ -97,7 +102,7 @@ export class MethodResolver {
       id,
     });
 
-    if (method.status === MethodStatus.DRAFT) {
+    if ([MethodStatus.DRAFT, MethodStatus.EDITABLE]) {
       return method.remove();
     }
 

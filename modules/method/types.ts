@@ -14,6 +14,7 @@ export type Method<Handlers extends DataHandler[]> = {
 
 export enum MethodType {
   CALIBRATION_CURVE = 0,
+  CALIBRATION_CURVE_ABSOLUTE = 1,
 }
 
 export enum MethodStatus {
@@ -38,3 +39,9 @@ export type CalibrationCurveMethodData = {
 };
 
 export type MethodData = CalibrationCurveMethodData;
+
+export enum AnalysisStatus {
+  DRAFT,
+  COMPLETED,
+  ARCHIEVED,
+}

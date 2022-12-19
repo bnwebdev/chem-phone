@@ -1,16 +1,12 @@
 import { FC } from "react";
-import { useIdentity } from "../../auth/graphql/queries";
+import { useAuth } from "../../auth/context/AuthProvider";
 import AuthHome from "./AuthHome";
 import NotAuthHome from "./NotAuthHome";
 
 const Home: FC = () => {
-  const { identityData, identityLoading } = useIdentity();
+  const { identity } = useAuth();
 
-  if (identityLoading) {
-    return null;
-  }
-
-  return !!identityData ? <AuthHome /> : <NotAuthHome />;
+  return !!identity ? <AuthHome /> : <NotAuthHome />;
 };
 
 export default Home;

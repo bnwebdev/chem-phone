@@ -1,11 +1,20 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 import { MethodType, MethodData, MethodStatus } from '@app/methods';
 
 import { CommonEntity } from '../common/common.entity';
 import { UserEntity } from '../user/user.entity';
-import { Field, ObjectType } from '@nestjs/graphql';
 import { MethodDataObject } from './grapgql/method-data.object';
+import { BrainEntity } from '../brain/brain.entity';
+import { AnalysisEntity } from '../analysis/analysis.entity';
 
 @Entity('method')
 @ObjectType('Method')
@@ -50,4 +59,10 @@ export class MethodEntity extends CommonEntity {
   protected get updAt(): Date {
     return this.updatedAt;
   }
+
+  @OneToOne(() => BrainEntity, (brain) => brain.method)
+  brain: BrainEntity;
+
+  @OneToMany(() => AnalysisEntity, (analysis) => analysis.method)
+  analyses: AnalysisEntity[];
 }

@@ -1,5 +1,20 @@
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  Input,
+  InputLabel,
+  Typography,
+} from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { FC, useContext, useMemo } from "react";
+import { FC, useContext, useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router";
+import { useCreateAnalysis } from "../../../analysis/graphql/mutations";
 import { MethodContext } from "../context";
 
 const columns: GridColDef[] = [
@@ -22,23 +37,98 @@ const columns: GridColDef[] = [
   },
 ];
 
-const CompletedMethod: FC = () => {
+const CompletedMethod: FC<{ readable?: boolean }> = ({ readable }) => {
   const { method } = useContext(MethodContext);
 
   const points = useMemo(
-    () => method.data.curve.map((p) => ({ ...p, id: Math.random() })),
+    () =>
+      method.data.curve
+        .map((p) => ({ ...p, id: Math.random() }))
+        .sort((lhs, rhs) => lhs.concentration - rhs.concentration),
     [method]
   );
 
+  const history = useHistory();
+
+  const [createAnalysisOpen, setCreateAnalysisOpen] = useState(false);
+
+  const { createAnalysis, createAnalysisError, createAnalysisLoading } =
+    useCreateAnalysis();
+
+  const { register, handleSubmit, reset } = useForm<{
+    name: string;
+    methodId: number;
+  }>({
+    defaultValues: { methodId: method.id },
+  });
+
+  useEffect(() => {
+    if (!createAnalysisOpen) {
+      reset();
+    }
+  }, [createAnalysisOpen, reset]);
+
   return (
-    <DataGrid
-      autoHeight
-      rows={points}
-      columns={columns}
-      pageSize={10}
-      rowsPerPageOptions={[10]}
-      hideFooter
-    />
+    <>
+      {!readable && (
+        <Button
+          variant="contained"
+          disabled={createAnalysisLoading}
+          onClick={() => setCreateAnalysisOpen(true)}
+        >
+          {createAnalysisLoading && (
+            <CircularProgress size={20} color="inherit" />
+          )}
+          Create analysis
+        </Button>
+      )}
+      {createAnalysisError && (
+        <Typography color={"error"} variant="body1">
+          {createAnalysisError.message}
+        </Typography>
+      )}
+      <Dialog
+        fullWidth
+        open={createAnalysisOpen}
+        onClose={() => setCreateAnalysisOpen(false)}
+      >
+        <form
+          onSubmit={handleSubmit(async ({ name, methodId }) => {
+            setCreateAnalysisOpen(false);
+            const { data, errors } = await createAnalysis({ name, methodId });
+            if (data && !errors) {
+              history.push(`/analysis/${data.createAnalysis.id}`);
+            }
+          })}
+        >
+          <DialogTitle>
+            Create analysis for method {method.name}#{method.id}
+          </DialogTitle>
+          <DialogContent>
+            <FormControl fullWidth margin="dense">
+              <InputLabel>Name</InputLabel>
+              <Input {...register("name", { required: true })} />
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button color="success" type="submit">
+              Create
+            </Button>
+            <Button color="info" onClick={() => setCreateAnalysisOpen(false)}>
+              Cancel
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
+      <DataGrid
+        autoHeight
+        rows={points}
+        columns={columns}
+        pageSize={10}
+        rowsPerPageOptions={[10]}
+        hideFooter
+      />
+    </>
   );
 };
 

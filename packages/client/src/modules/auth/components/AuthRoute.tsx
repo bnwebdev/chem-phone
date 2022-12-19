@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { Route, RouteProps } from "react-router";
-
-import { useIdentity } from "../graphql/queries";
+import { useAuth } from "../context/AuthProvider";
 
 type Props = RouteProps & {
   auth?: boolean;
@@ -9,15 +8,11 @@ type Props = RouteProps & {
 };
 
 const AuthRoute: FC<Props> = ({ auth, path, to, ...props }) => {
-  const { identityData, identityLoading } = useIdentity();
-
-  if (identityLoading) {
-    return null;
-  }
+  const { identity } = useAuth();
 
   const authCompare = auth === undefined ? true : auth;
 
-  if (authCompare !== Boolean(identityData)) {
+  if (authCompare !== Boolean(identity)) {
     return null;
   }
 

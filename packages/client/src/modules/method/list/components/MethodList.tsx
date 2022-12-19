@@ -140,18 +140,16 @@ const MethodList: FC = () => {
   const i18n = useTranslation("methods");
 
   return (
-    <>
-      <Box mt={3}>
-        <DataGrid
-          autoHeight
-          rows={allMethodsData || []}
-          columns={columns(i18n, allMethodRefetch)}
-          pageSize={10}
-          rowsPerPageOptions={[10]}
-          loading={allMethodsLoading}
-        />
-      </Box>
-    </>
+    <Box mt={3}>
+      <DataGrid
+        autoHeight
+        rows={allMethodsData || []}
+        columns={columns(i18n, allMethodRefetch)}
+        pageSize={10}
+        rowsPerPageOptions={[10]}
+        loading={allMethodsLoading}
+      />
+    </Box>
   );
 };
 

@@ -6,5 +6,14 @@ import notFoundPage from "./not-found-page";
 import auth from "./auth";
 import method from "./method";
 import home from "./home";
+import analysis from "./analysis";
 
-export default new ClientModule(method, home, auth, core, i18n, notFoundPage);
+export default new ClientModule(
+  method,
+  analysis,
+  home,
+  auth,
+  core,
+  i18n,
+  notFoundPage
+);
