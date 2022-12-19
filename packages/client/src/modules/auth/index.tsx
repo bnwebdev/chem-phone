@@ -5,6 +5,7 @@ import { AuthRoute } from "./components";
 import Logout from "./components/Logout";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
+import AuthProvider from "./context/AuthProvider";
 import source from "./locale";
 
 export default new ClientModule({
@@ -14,9 +15,10 @@ export default new ClientModule({
     <AuthRoute auth={true} path="/logout" component={Logout} />,
   ],
   rightNavItem: [
-    { label: 'auth:labels.signIn', link: "/signin", auth: false },
-    { label: 'auth:labels.signUp', link: "/signup", auth: false },
-    { label: 'auth:labels.logout', link: "/logout", auth: true }
+    { label: "auth:labels.signIn", link: "/signin", auth: false },
+    { label: "auth:labels.signUp", link: "/signup", auth: false },
+    { label: "auth:labels.logout", link: "/logout", auth: true },
   ],
-  localization: [{ namespace: 'auth', source }]
-})
+  localization: [{ namespace: "auth", source }],
+  contextProvider: [AuthProvider],
+});

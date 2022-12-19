@@ -38,7 +38,7 @@ export class AuthService {
     await this.userRepository.insert({ username, password: hash });
   }
 
-  generateTokens(user: UserEntity) {
+  generateTokens(user: Pick<UserEntity, 'id'>) {
     const payload: Payload = { user: { id: user.id } };
 
     const authToken = jwt.sign(
@@ -54,5 +54,20 @@ export class AuthService {
     );
 
     return { authToken, refreshToken };
+  }
+
+  updateAuthToken(refreshToken: string) {
+    try {
+      const payload = jwt.verify(
+        refreshToken,
+        this.config.get<string>('REFRESH_SECRET'),
+      ) as Payload;
+
+      const { authToken } = this.generateTokens(payload.user);
+
+      return { authToken, payload };
+    } catch {
+      return null;
+    }
   }
 }

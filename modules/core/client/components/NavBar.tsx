@@ -2,35 +2,54 @@ import { FC, MouseEvent, useMemo, useState } from "react";
 
 import { NavItem } from "@app/module-client";
 
-import MenuIcon from '@mui/icons-material/Menu';;
-import {Divider, Tooltip, Avatar, Container, Menu, Typography, IconButton, Toolbar, Box, AppBar} from '@mui/material';
-import AdbIcon from '@mui/icons-material/Adb';
+import MenuIcon from "@mui/icons-material/Menu";
+import {
+  Divider,
+  Tooltip,
+  Avatar,
+  Container,
+  Menu,
+  Typography,
+  IconButton,
+  Toolbar,
+  Box,
+  AppBar,
+} from "@mui/material";
+import AdbIcon from "@mui/icons-material/Adb";
 
-import AppNavLink from './AppNavLink'
-import AppSideNavLink from './AppSideNavLink'
-import { useIdentity } from "../../../../packages/client/src/modules/auth/graphql/queries";
+import AppNavLink from "./AppNavLink";
+import AppSideNavLink from "./AppSideNavLink";
+import { useAuth } from "../../../../packages/client/src/modules/auth/context/AuthProvider";
 
 type Props = {
-    leftItems: NavItem[]
-    rightItems: NavItem[]
-}
+  leftItems: NavItem[];
+  rightItems: NavItem[];
+};
 
-const normalizeNavItems = (navItems: NavItem[], identityData?: { username: string }) => {
-  const plainNormalized = navItems.filter(({ auth }) => auth === undefined || !!identityData === auth)
+const normalizeNavItems = (
+  navItems: NavItem[],
+  identity: { username: string } | null | undefined
+) => {
+  const plainNormalized = navItems.filter(
+    ({ auth }) => auth === undefined || !!identity === auth
+  );
 
   const deepNormalized = plainNormalized.map((item) => {
-    if ('children' in item) {
-      item.children = normalizeNavItems(item.children, identityData)
+    if ("children" in item) {
+      item.children = normalizeNavItems(item.children, identity);
     }
 
     return item;
-  })
+  });
 
-  return deepNormalized
-}
+  return deepNormalized;
+};
 
-const NavBar: FC<Props> = ({ leftItems: rawLeftItems, rightItems: rawRightItems }) => {
-  const { identityData, identityLoading } = useIdentity()
+const NavBar: FC<Props> = ({
+  leftItems: rawLeftItems,
+  rightItems: rawRightItems,
+}) => {
+  const { identity } = useAuth();
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
@@ -50,18 +69,20 @@ const NavBar: FC<Props> = ({ leftItems: rawLeftItems, rightItems: rawRightItems 
     setAnchorElUser(null);
   };
 
-  const leftItems = useMemo(() => normalizeNavItems(rawLeftItems, identityData), [identityData, rawLeftItems]) 
-  const rightItems = useMemo(() => normalizeNavItems(rawRightItems, identityData), [identityData, rawRightItems])
-  
-  if (identityLoading) {
-    return null
-  }
+  const leftItems = useMemo(
+    () => normalizeNavItems(rawLeftItems, identity),
+    [identity, rawLeftItems]
+  );
+  const rightItems = useMemo(
+    () => normalizeNavItems(rawRightItems, identity),
+    [identity, rawRightItems]
+  );
 
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -69,18 +90,18 @@ const NavBar: FC<Props> = ({ leftItems: rawLeftItems, rightItems: rawRightItems 
             href="/"
             sx={{
               mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
+              display: { xs: "none", md: "flex" },
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
             }}
           >
             CHEMPHONE
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -95,27 +116,34 @@ const NavBar: FC<Props> = ({ leftItems: rawLeftItems, rightItems: rawRightItems 
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: "bottom",
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
+                vertical: "top",
+                horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: "block", md: "none" },
               }}
             >
-              {leftItems.concat(rightItems).map((item, idx, arr) => ([
-                <AppSideNavLink item={item} key={item.label + `${idx}`} buttonProps={{onClick: handleCloseNavMenu}} hideModals={!Boolean(anchorElNav)}/>,
-                idx !== arr.length - 1 && <Divider key={`divider-${idx}`}/>
-              ]))}
+              {leftItems
+                .concat(rightItems)
+                .map((item, idx, arr) => [
+                  <AppSideNavLink
+                    item={item}
+                    key={item.label + `${idx}`}
+                    buttonProps={{ onClick: handleCloseNavMenu }}
+                    hideModals={!Boolean(anchorElNav)}
+                  />,
+                  idx !== arr.length - 1 && <Divider key={`divider-${idx}`} />,
+                ])}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -123,20 +151,20 @@ const NavBar: FC<Props> = ({ leftItems: rawLeftItems, rightItems: rawRightItems 
             href=""
             sx={{
               mr: 2,
-              display: { xs: 'flex', md: 'none' },
+              display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: 'monospace',
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
             }}
           >
             CHEMPHONE
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {leftItems.concat(rightItems).map((item, idx) => (
-                <AppNavLink item={item} key={item.label + `${idx}`} />
+              <AppNavLink item={item} key={item.label + `${idx}`} />
             ))}
           </Box>
 
@@ -147,26 +175,25 @@ const NavBar: FC<Props> = ({ leftItems: rawLeftItems, rightItems: rawRightItems 
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
-            >
-            </Menu>
+            ></Menu>
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
   );
-}
+};
 export default NavBar;

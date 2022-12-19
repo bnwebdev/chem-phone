@@ -1,26 +1,28 @@
-import { useQuery, gql } from '@apollo/client'
+import { useQuery, gql } from "@apollo/client";
+import { Identity } from "../types";
 
 const QUERY = gql`
-    query Identity {
-        identity {
-            username
-        }
+  query Identity {
+    identity {
+      username
     }
-`
+  }
+`;
 
 type Payload = {
-    identity: {
-        username: string
-    }
-}
+  identity: Identity;
+};
 
-export const useIdentity = () => {
-    const {data, error, loading, refetch} = useQuery<Payload>(QUERY, { fetchPolicy: 'network-only' })
+export const _useIdentity = () => {
+  const { data, error, loading, refetch } = useQuery<Payload>(QUERY, {
+    fetchPolicy: "network-only",
+    pollInterval: 1000,
+  });
 
-    return {
-        identityData: data?.identity,
-        identityError: error,
-        identityLoading: loading,
-        refetchLoading: refetch,
-    }
-}
+  return {
+    identityData: data?.identity,
+    identityError: error,
+    identityLoading: loading,
+    refetchLoading: refetch,
+  };
+};

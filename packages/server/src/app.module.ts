@@ -1,8 +1,15 @@
-import { Module } from '@nestjs/common';
+import {
+  CacheModule,
+  CacheStore,
+  CacheStoreFactory,
+  Module,
+} from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import type { RedisClientOptions } from 'redis';
+import { redisStore } from 'cache-manager-redis-store';
 
 import { CommonModule } from './modules/common/common.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -41,6 +48,21 @@ import { BrainEntity } from './modules/brain/brain.entity';
       cors: {
         credential: true,
         origin: 'http://localhost:3000',
+      },
+    }),
+    CacheModule.registerAsync<RedisClientOptions>({
+      inject: [ConfigService],
+      isGlobal: true,
+      useFactory: (config: ConfigService) => {
+        const url = `redis://${config.get<string>(
+          'redis.host',
+        )}:${config.get<string>('redis.port')}`;
+
+        return {
+          store: redisStore as unknown as CacheStoreFactory,
+          url,
+          isGlobal: true,
+        };
       },
     }),
     AuthModule,
