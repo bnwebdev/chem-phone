@@ -1,9 +1,10 @@
 import { ClientModule } from "@app/module-client";
 import create from "./create";
 import edit from "./edit";
+import list from "./list";
 import source from "./locale";
 
-export default new ClientModule(create, edit, {
+export default new ClientModule(create, edit, list, {
   localization: [{ namespace: "analyses", source }],
   leftNavItem: [
     {

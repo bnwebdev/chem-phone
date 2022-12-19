@@ -18,6 +18,7 @@ const MUTATION = gql`
   mutation CreateAnalysis($input: CreateAnalysisDto!) {
     createAnalysis(input: $input) {
       id
+      name
       userId
       methodId
       status

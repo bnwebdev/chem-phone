@@ -22,10 +22,14 @@ export class AnalysisResolver {
       req: { user },
     } = context;
 
-    const whereClause =
+    const whereClause: { methodId?: number; status?: AnalysisStatus } =
       typeof filters?.methodId === 'number'
         ? { methodId: filters.methodId }
         : {};
+
+    if (typeof filters?.status === 'number') {
+      whereClause.status = filters.status;
+    }
 
     return AnalysisEntity.findBy({
       userId: user.id,
