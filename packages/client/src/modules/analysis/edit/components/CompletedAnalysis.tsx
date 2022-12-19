@@ -1,6 +1,10 @@
+import { Grid, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useContext, useMemo } from "react";
 import { AnalysisContext } from "../context/AnalysisProvider";
+
+const round = (value: number, presition: number) =>
+  Math.round(value * Math.pow(10, presition)) / Math.pow(10, presition);
 
 const columns: GridColDef[] = [
   {
@@ -9,14 +13,49 @@ const columns: GridColDef[] = [
     headerName: "Color",
     headerAlign: "center",
     renderCell: ({ value }) => <>rgba({value.join(",")})</>,
-    flex: 3,
+    flex: 1,
   },
   {
     field: "result",
     align: "center",
     headerName: "Result",
     headerAlign: "center",
-    flex: 1,
+    renderCell: ({ value }) => {
+      if (typeof value === "number") {
+        return <>{value}</>;
+      } else if (typeof value === "string") {
+        const data: Record<string, number> = JSON.parse(value);
+
+        return (
+          <Grid
+            container
+            direction="row"
+            alignItems={"center"}
+            justifyContent="space-between"
+          >
+            {Object.entries(data)
+              .map(([key, value]) => ({
+                key,
+                value: round(value * 100, 2) + "%",
+              }))
+              .sort((lhs, rhs) => Number(lhs.key) - Number(rhs.key))
+              .map(({ key, value }) => (
+                <Grid item key={key}>
+                  <Grid container alignItems="center" direction="column">
+                    <Typography variant="body2">{key}</Typography>
+                    <Typography variant="body2" color="teal">
+                      ({value})
+                    </Typography>
+                  </Grid>
+                </Grid>
+              ))}
+          </Grid>
+        );
+      }
+
+      return value;
+    },
+    flex: 3,
   },
 ];
 

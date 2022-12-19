@@ -1,6 +1,7 @@
 import { AnalysisStatus, MethodStatus } from '@app/methods/types';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AppGraphhQLContext } from 'src/app.types';
+import { BrainService } from '../brain/brain.service';
 import { MethodEntity } from '../method/method.entity';
 import { UserEntity } from '../user/user.entity';
 import { AnalysisEntity } from './analysis.entity';
@@ -15,6 +16,8 @@ import {
 
 @Resolver()
 export class AnalysisResolver {
+  constructor(private brainSerive: BrainService) {}
+
   @Query(() => [AnalysisEntity])
   async allAnalyses(
     @Context() context: AppGraphhQLContext<{ user: UserEntity }>,
@@ -158,7 +161,9 @@ export class AnalysisResolver {
 
     analysis.data = analysis.data.map((item) => ({
       ...item,
-      result: net.run(item.color).concentration,
+      result: JSON.stringify(
+        net.run(this.brainSerive.normalizeColor(item.color)),
+      ),
     }));
     analysis.status = AnalysisStatus.COMPLETED;
 

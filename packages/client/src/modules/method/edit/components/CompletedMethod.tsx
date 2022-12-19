@@ -41,7 +41,10 @@ const CompletedMethod: FC<{ readable?: boolean }> = ({ readable }) => {
   const { method } = useContext(MethodContext);
 
   const points = useMemo(
-    () => method.data.curve.map((p) => ({ ...p, id: Math.random() })),
+    () =>
+      method.data.curve
+        .map((p) => ({ ...p, id: Math.random() }))
+        .sort((lhs, rhs) => lhs.concentration - rhs.concentration),
     [method]
   );
 

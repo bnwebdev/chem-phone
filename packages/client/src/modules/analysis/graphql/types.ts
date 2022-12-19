@@ -3,7 +3,7 @@ import { AnalysisStatus } from "@app/method";
 export type AnalysisData = {
   raw?: string;
   color: [number, number, number, number];
-  result?: number;
+  result?: string; // JSON
   resultUnit?: string;
 };
 

@@ -1,9 +1,4 @@
-import {
-  CacheModule,
-  CacheStore,
-  CacheStoreFactory,
-  Module,
-} from '@nestjs/common';
+import { CacheModule, CacheStoreFactory, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -24,6 +19,8 @@ import { AnalysisEntity } from './modules/analysis/analysis.entity';
 import { MethodEntity } from './modules/method/method.entity';
 import { BrainModule } from './modules/brain/brain.module';
 import { BrainEntity } from './modules/brain/brain.entity';
+
+import './modules/brain/brain.types';
 
 @Module({
   imports: [

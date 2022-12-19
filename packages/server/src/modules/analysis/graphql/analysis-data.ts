@@ -10,7 +10,7 @@ export class AnalysisData {
   color: [number, number, number, number];
 
   @Field({ nullable: true })
-  result?: number;
+  result?: string;
 
   @Field({ nullable: true })
   resultUnit?: string;
