@@ -14,6 +14,7 @@ export type Method<Handlers extends DataHandler[]> = {
 
 export enum MethodType {
   CALIBRATION_CURVE = 0,
+  CALIBRATION_CURVE_ABSOLUTE = 1,
 }
 
 export enum MethodStatus {

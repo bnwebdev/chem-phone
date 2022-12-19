@@ -1,3 +1,4 @@
+import { MethodType } from '@app/methods/types';
 import { Injectable } from '@nestjs/common';
 import * as brain from 'brain.js';
 
@@ -18,14 +19,29 @@ export class BrainService {
       throw new Error(`Method data isn't provided`);
     }
 
-    const net = new brain.NeuralNetwork<InputType, OutputType>();
+    const net = new brain.NeuralNetwork<InputType, OutputType>({
+      errorThresh: 0.0005,
+    });
 
-    await net.trainAsync(
-      data.curve.map(({ color, concentration }) => ({
-        input: this.normalizeColor(color),
-        output: { [concentration]: 1 },
-      })),
-    );
+    if (method.type === MethodType.CALIBRATION_CURVE) {
+      await net.trainAsync(
+        data.curve.map(({ color, concentration }) => ({
+          input: this.normalizeColor(color),
+          output: { [concentration]: 1 },
+        })),
+      );
+    } else if (method.type === MethodType.CALIBRATION_CURVE_ABSOLUTE) {
+      const maxConcentration = Math.max(
+        ...data.curve.map(({ concentration }) => concentration),
+      );
+
+      await net.trainAsync(
+        data.curve.map(({ color, concentration }) => ({
+          input: this.normalizeColor(color),
+          output: { concentration: concentration / maxConcentration },
+        })),
+      );
+    }
 
     const results = await BrainEntity.insert({
       methodId: method.id,

@@ -103,8 +103,10 @@ const Analysis: FC = () => {
           </Accordion>
         </Grid>
         {analysisData.status === AnalysisStatus.DRAFT && <DraftAnalysis />}
-        {analysisData.status === AnalysisStatus.COMPLETED && (
-          <CompletedAnalysis />
+        {analysisData.status === AnalysisStatus.COMPLETED && methodData && (
+          <MethodProvider method={methodData} refetch={async () => {}}>
+            <CompletedAnalysis />
+          </MethodProvider>
         )}
       </Grid>
     </AnalysisProvider>

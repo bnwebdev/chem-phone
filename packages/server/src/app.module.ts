@@ -20,8 +20,6 @@ import { MethodEntity } from './modules/method/method.entity';
 import { BrainModule } from './modules/brain/brain.module';
 import { BrainEntity } from './modules/brain/brain.entity';
 
-import './modules/brain/brain.types';
-
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),

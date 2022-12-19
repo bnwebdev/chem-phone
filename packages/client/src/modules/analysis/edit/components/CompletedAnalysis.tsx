@@ -1,12 +1,15 @@
+import { MethodType } from "@app/method";
 import { Grid, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useContext, useMemo } from "react";
+import { MethodContext } from "../../../method/edit/context";
+import { Method } from "../../../method/graphql/types";
 import { AnalysisContext } from "../context/AnalysisProvider";
 
 const round = (value: number, presition: number) =>
   Math.round(value * Math.pow(10, presition)) / Math.pow(10, presition);
 
-const columns: GridColDef[] = [
+const getColumns = (method: Method): GridColDef[] => [
   {
     field: "color",
     align: "center",
@@ -21,39 +24,44 @@ const columns: GridColDef[] = [
     headerName: "Result",
     headerAlign: "center",
     renderCell: ({ value }) => {
-      if (typeof value === "number") {
-        return <>{value}</>;
-      } else if (typeof value === "string") {
-        const data: Record<string, number> = JSON.parse(value);
+      const data: Record<string, number> = JSON.parse(value);
 
+      if (method.type === MethodType.CALIBRATION_CURVE_ABSOLUTE) {
+        const maxConcentration = Math.max(
+          ...method.data.curve.map(({ concentration }) => concentration)
+        );
         return (
-          <Grid
-            container
-            direction="row"
-            alignItems={"center"}
-            justifyContent="space-between"
-          >
-            {Object.entries(data)
-              .map(([key, value]) => ({
-                key,
-                value: round(value * 100, 2) + "%",
-              }))
-              .sort((lhs, rhs) => Number(lhs.key) - Number(rhs.key))
-              .map(({ key, value }) => (
-                <Grid item key={key}>
-                  <Grid container alignItems="center" direction="column">
-                    <Typography variant="body2">{key}</Typography>
-                    <Typography variant="body2" color="teal">
-                      ({value})
-                    </Typography>
-                  </Grid>
-                </Grid>
-              ))}
-          </Grid>
+          <Typography variant="body2" color="teal">
+            {round(data.concentration * maxConcentration, 4)}
+          </Typography>
         );
       }
 
-      return value;
+      return (
+        <Grid
+          container
+          direction="row"
+          alignItems={"center"}
+          justifyContent="space-between"
+        >
+          {Object.entries(data)
+            .map(([key, value]) => ({
+              key,
+              value: round(value * 100, 2) + "%",
+            }))
+            .sort((lhs, rhs) => Number(lhs.key) - Number(rhs.key))
+            .map(({ key, value }) => (
+              <Grid item key={key}>
+                <Grid container alignItems="center" direction="column">
+                  <Typography variant="body2">{key}</Typography>
+                  <Typography variant="body2" color="teal">
+                    ({value})
+                  </Typography>
+                </Grid>
+              </Grid>
+            ))}
+        </Grid>
+      );
     },
     flex: 3,
   },
@@ -61,6 +69,7 @@ const columns: GridColDef[] = [
 
 const CompletedAnalysis = () => {
   const { analysis } = useContext(AnalysisContext);
+  const { method } = useContext(MethodContext);
 
   const rows = useMemo(
     () =>
@@ -73,6 +82,8 @@ const CompletedAnalysis = () => {
       })),
     [analysis]
   );
+
+  const columns = getColumns(method);
 
   return (
     <DataGrid
