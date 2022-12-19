@@ -47,7 +47,7 @@ export class AuthMiddleware implements NestMiddleware {
 
           await this.cache.del(authToken);
           await this.cache.set(newAuthToken, refreshToken, 30 * 24 * 60 * 60); // ttl in seconds
-          res.cookie(AUTH_TOKEN_NAME, authToken, { httpOnly: true });
+          res.cookie(AUTH_TOKEN_NAME, newAuthToken, { httpOnly: true });
           req.user = await UserEntity.findOneBy({ id: payload.user.id });
 
           return next();
