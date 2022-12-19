@@ -9,6 +9,7 @@ import AddOrEditPointModal from "./components/AddOrEditPointModal";
 type GetColumnsProps = {
   changePointHandler: (id: number) => void;
   deletePointHandler: (id: number) => void;
+  actionsDisabled?: boolean;
 };
 
 const getColumns = (props: GetColumnsProps): GridColDef[] => [
@@ -36,10 +37,15 @@ const getColumns = (props: GetColumnsProps): GridColDef[] => [
         <Button
           color="warning"
           onClick={() => props.changePointHandler(row.id)}
+          disabled={props.actionsDisabled}
         >
           Edit
         </Button>
-        <Button color="error" onClick={() => props.deletePointHandler(row.id)}>
+        <Button
+          color="error"
+          onClick={() => props.deletePointHandler(row.id)}
+          disabled={props.actionsDisabled}
+        >
           Delete
         </Button>
       </>
@@ -55,7 +61,9 @@ const DraftAndEditableMethod: FC = () => {
   const { method, refetch } = useContext(MethodContext);
 
   const { editMethod } = useEditMethod();
-  const { completeMethod } = useCompleteMethod(method.id);
+  const { completeMethod, completeMethodLoading } = useCompleteMethod(
+    method.id
+  );
 
   const completeMethodHandler = async () => {
     await completeMethod();
@@ -101,6 +109,7 @@ const DraftAndEditableMethod: FC = () => {
         autoHeight
         rows={points}
         columns={getColumns({
+          actionsDisabled: completeMethodLoading,
           changePointHandler: (id) => {
             if (pointToChangeId === id) {
               setEditedPoint({
@@ -178,6 +187,7 @@ const DraftAndEditableMethod: FC = () => {
               setCreatedPoint(undefined);
               onClick();
             }}
+            disabled={completeMethodLoading}
           >
             Add point
           </Button>
@@ -221,8 +231,11 @@ const DraftAndEditableMethod: FC = () => {
           variant="outlined"
           color="success"
           onClick={completeMethodHandler}
+          disabled={completeMethodLoading}
         >
-          Complete (you will not be able to undo this action)
+          {completeMethodLoading
+            ? "Completing..."
+            : "Complete (you will not be able to undo this action)"}
         </Button>
       )}
     </>

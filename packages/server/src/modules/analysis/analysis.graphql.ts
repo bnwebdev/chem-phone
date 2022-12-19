@@ -8,6 +8,7 @@ import {
   AllAnalysesDto,
   AnalysisDto,
   ArchieveAnalysisDto,
+  ComputeAnalysisDataDto,
   CreateAnalysisDto,
   UpdateAnalysisDataDto,
 } from './dto';
@@ -127,6 +128,40 @@ export class AnalysisResolver {
     return analysis.save();
   }
 
-  //   @Mutation(() => AnalysisEntity)
-  //   processingData() {}
+  @Mutation(() => AnalysisEntity)
+  async computeAnalysisData(
+    @Context() context: AppGraphhQLContext<{ user: UserEntity }>,
+    @Args('input') { id }: ComputeAnalysisDataDto,
+  ) {
+    const {
+      req: { user },
+    } = context;
+
+    const analysis = await AnalysisEntity.findOneOrFail({
+      where: {
+        status: AnalysisStatus.DRAFT,
+        userId: user.id,
+        id,
+      },
+      relations: {
+        method: {
+          brain: true,
+        },
+      },
+    });
+
+    if (analysis.data.length === 0) {
+      throw new Error(`AnalysisData is missed`);
+    }
+
+    const net = analysis.method.brain.net;
+
+    analysis.data = analysis.data.map((item) => ({
+      ...item,
+      result: net.run(item.color).concentration,
+    }));
+    analysis.status = AnalysisStatus.COMPLETED;
+
+    return analysis.save();
+  }
 }

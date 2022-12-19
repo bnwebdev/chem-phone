@@ -1,25 +1,20 @@
-import { useTranslation } from "@app/i18n";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
-  LinearProgress,
   Typography,
 } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import CompletedMethod from "../../../method/edit/components/CompletedMethod";
 import { ColorInput } from "../../../method/edit/components/PointPicker/inputs";
-import { MethodProvider } from "../../../method/edit/context";
-import { useMethod } from "../../../method/graphql/queries";
-import { useUpdateAnalysisData } from "../../graphql/mutations";
+import {
+  useComputeAnalysisData,
+  useUpdateAnalysisData,
+} from "../../graphql/mutations";
 import { AnalysisData } from "../../graphql/types";
 import { AnalysisContext } from "../context/AnalysisProvider";
 
@@ -69,16 +64,14 @@ const getColumns = (
 
 const DraftAnalysis = () => {
   const { analysis, refetch } = useContext(AnalysisContext);
-  const i18n = useTranslation("analyses");
 
   const [pickColorOpen, setPickColorOpen] = useState(false);
 
-  const { id, name, status, details, data } = analysis;
+  const { id, data } = analysis;
   const analysisData = useMemo(
     () => data.map((item) => ({ ...item, id: Math.random() })),
     [data]
   );
-  const { methodData, methodLoading } = useMethod(analysis.methodId);
 
   const { handleSubmit, control, setValue, reset } = useForm<InputData>();
 
@@ -87,6 +80,19 @@ const DraftAnalysis = () => {
     updateAnalysisDataError,
     updateAnalysisDataLoading,
   } = useUpdateAnalysisData();
+
+  const {
+    computeAnalysisData,
+    computeAnalysisDataLoading,
+    computeAnalysisDataError,
+  } = useComputeAnalysisData(id);
+
+  const computeAnalysisDataHandler = useCallback(async () => {
+    const { data, errors } = await computeAnalysisData();
+    if (!errors && data) {
+      refetch();
+    }
+  }, [computeAnalysisData, refetch]);
 
   const onSubmit = useCallback(
     async (value: InputData) => {
@@ -121,59 +127,34 @@ const DraftAnalysis = () => {
   });
 
   return (
-    <Grid container direction="column" gap={3} marginTop={3}>
-      <Grid item container alignItems={"center"} justifyContent="space-around">
-        <Grid item>
-          <Typography variant="h2">
-            Analysis {name}#{id}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="h2" color="turquoise" fontWeight={400}>
-            {i18n.t(`status.${status}`) as string}
-          </Typography>
-        </Grid>
-      </Grid>
+    <>
       <Grid item>
-        <Accordion>
-          <AccordionSummary>
-            Method {methodData?.name}
-            {methodData ? "#" : ""}
-            {methodData?.id}
-          </AccordionSummary>
-          <AccordionDetails>
-            {methodLoading && <LinearProgress />}
-            {methodData && !methodLoading && (
-              <MethodProvider method={methodData} refetch={async () => {}}>
-                <CompletedMethod readable />
-              </MethodProvider>
-            )}
-          </AccordionDetails>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary>Analysis details</AccordionSummary>
-          <AccordionDetails>
-            {(details || "-").split(`\n`).map((row, idx) => (
-              <Typography variant="body1" key={idx}>
-                {row}
-              </Typography>
-            ))}
-          </AccordionDetails>
-        </Accordion>
-      </Grid>
-      <Grid item>
+        {computeAnalysisDataError && (
+          <Typography variant="body1" color="error">
+            {computeAnalysisDataError.message}
+          </Typography>
+        )}
         <Button
           fullWidth
           variant="contained"
           color="success"
-          disabled={!data.length}
+          disabled={!data.length || computeAnalysisDataLoading}
+          onClick={computeAnalysisDataHandler}
         >
-          Start computing
+          {computeAnalysisDataLoading ? "Computing..." : "Start computing"}
         </Button>
       </Grid>
+
       <Grid item>
-        <DataGrid rows={analysisData} columns={columns} autoHeight />
+        <DataGrid
+          rows={analysisData}
+          columns={columns}
+          autoHeight
+          pageSize={10}
+          rowsPerPageOptions={[10]}
+        />
       </Grid>
+
       <Grid item>
         {updateAnalysisDataError && (
           <Typography variant="body1" color="error">
@@ -184,7 +165,7 @@ const DraftAnalysis = () => {
           variant="contained"
           fullWidth
           onClick={() => setPickColorOpen(true)}
-          disabled={updateAnalysisDataLoading}
+          disabled={updateAnalysisDataLoading || computeAnalysisDataLoading}
         >
           Pick color
         </Button>
@@ -244,7 +225,7 @@ const DraftAnalysis = () => {
           </form>
         </Dialog>
       </Grid>
-    </Grid>
+    </>
   );
 };
 

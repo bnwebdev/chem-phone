@@ -26,7 +26,7 @@ const AnalysisProvider: FC<AnalysisProviderProps> = ({
         analysis,
         refetch,
       }),
-      [analysis]
+      [analysis, refetch]
     )}
   >
     {children}

@@ -14,7 +14,9 @@ export class BrainService {
       throw new Error(`Method data isn't provided`);
     }
 
-    const net = new brain.NeuralNetwork<InputType, OutputType>();
+    const net = new brain.NeuralNetwork<InputType, OutputType>({
+      hiddenLayers: [10, 10],
+    });
 
     await net.trainAsync(
       data.curve.map(({ color, concentration }) => ({

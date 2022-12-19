@@ -1,6 +1,12 @@
 import { AnalysisStatus } from '@app/methods/types';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { CommonEntity } from '../common/common.entity';
 import { MethodEntity } from '../method/method.entity';
@@ -42,6 +48,7 @@ export class AnalysisEntity extends CommonEntity {
   user: UserEntity;
 
   @ManyToOne(() => MethodEntity, (method) => method.analyses)
+  @JoinColumn({ name: 'method_id' })
   method: MethodEntity;
 
   @Field({ name: 'createdAt' })
