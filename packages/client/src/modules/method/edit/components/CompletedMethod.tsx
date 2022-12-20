@@ -1,6 +1,6 @@
+import { LoadingButton } from "@mui/lab";
 import {
   Button,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -71,16 +71,13 @@ const CompletedMethod: FC<{ readable?: boolean }> = ({ readable }) => {
   return (
     <>
       {!readable && (
-        <Button
+        <LoadingButton
           variant="contained"
-          disabled={createAnalysisLoading}
+          loading={createAnalysisLoading}
           onClick={() => setCreateAnalysisOpen(true)}
         >
-          {createAnalysisLoading && (
-            <CircularProgress size={20} color="inherit" />
-          )}
           Create analysis
-        </Button>
+        </LoadingButton>
       )}
       {createAnalysisError && (
         <Typography color={"error"} variant="body1">

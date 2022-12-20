@@ -1,6 +1,6 @@
 import { MethodStatus } from "@app/method";
+import { LoadingButton } from "@mui/lab";
 import {
-  Button,
   CircularProgress,
   FormControl,
   FormLabel,
@@ -115,16 +115,14 @@ const Create: FC = () => {
             )}
           ></Controller>
         </FormControl>
-        <Button
-          type="submit"
+        <LoadingButton
           variant="contained"
-          disabled={!selectItems?.length || createAnalysisLoading}
+          type="submit"
+          loading={createAnalysisLoading}
+          disabled={!selectItems?.length}
         >
-          {createAnalysisLoading && (
-            <CircularProgress color="inherit" size={20} />
-          )}
           Create analysis
-        </Button>
+        </LoadingButton>
         {createAnalysisError && (
           <Typography color="error" variant="body1">
             {createAnalysisError.message}

@@ -18,6 +18,7 @@ import { useTranslation } from "@app/i18n";
 
 import { useAllMethods } from "../../graphql/queries";
 import { useArchieveMethod } from "../../graphql/mutations";
+import { LoadingButton } from "@mui/lab";
 
 const Actions: FC<{ id: number; refetch: () => void }> = ({ id, refetch }) => {
   const [open, setOpen] = useState(false);
@@ -32,10 +33,12 @@ const Actions: FC<{ id: number; refetch: () => void }> = ({ id, refetch }) => {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} disabled={archieveMethodLoading}>
-        {archieveMethodLoading && <CircularProgress size={30} />}
+      <LoadingButton
+        onClick={() => setOpen(true)}
+        loading={archieveMethodLoading}
+      >
         Delete
-      </Button>
+      </LoadingButton>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Remove method #{id}</DialogTitle>
         <DialogContent>
