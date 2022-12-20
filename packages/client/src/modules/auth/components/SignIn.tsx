@@ -54,6 +54,9 @@ const SignIn: FC = () => {
               />
             </FormControl>
           </Grid>
+          <Grid item xs={12} mb={3}>
+            <ErrorHolder error={loginError} />
+          </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <Button
               variant="outlined"
@@ -65,9 +68,6 @@ const SignIn: FC = () => {
             </Button>
           </Grid>
         </Grid>
-      </Grid>
-      <Grid container justifyContent="center">
-        <ErrorHolder error={loginError} />
       </Grid>
     </form>
   );
