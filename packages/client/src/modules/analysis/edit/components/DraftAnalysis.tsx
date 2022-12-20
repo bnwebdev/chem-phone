@@ -5,11 +5,11 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  Typography,
 } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import ErrorHolder from "../../../common/components/ErrorHolder";
 import { ColorInput } from "../../../method/edit/components/PointPicker/inputs";
 import {
   useComputeAnalysisData,
@@ -129,11 +129,7 @@ const DraftAnalysis = () => {
   return (
     <>
       <Grid item>
-        {computeAnalysisDataError && (
-          <Typography variant="body1" color="error">
-            {computeAnalysisDataError.message}
-          </Typography>
-        )}
+        <ErrorHolder error={computeAnalysisDataError} />
         <Button
           fullWidth
           variant="contained"
@@ -156,11 +152,7 @@ const DraftAnalysis = () => {
       </Grid>
 
       <Grid item>
-        {updateAnalysisDataError && (
-          <Typography variant="body1" color="error">
-            {updateAnalysisDataError.message}
-          </Typography>
-        )}
+        <ErrorHolder error={updateAnalysisDataError} />
         <Button
           variant="contained"
           fullWidth
@@ -199,11 +191,7 @@ const DraftAnalysis = () => {
                 }}
                 render={({ field: { value }, fieldState: { error } }) => (
                   <>
-                    {error?.message && (
-                      <Typography variant="body1" color="error">
-                        {error.message}
-                      </Typography>
-                    )}
+                    {<ErrorHolder error={error} />}
                     <ColorInput
                       value={value}
                       onChange={(changedValue) =>

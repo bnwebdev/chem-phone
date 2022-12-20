@@ -1,7 +1,6 @@
 import { FC, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
-  Alert,
   Box,
   Button,
   FormControl,
@@ -18,6 +17,7 @@ import { useTranslation } from "@app/i18n";
 
 import { useCreateMethod } from "../../graphql/mutations";
 import { useHistory } from "react-router";
+import ErrorHolder from "../../../common/components/ErrorHolder";
 
 const METHOD_TYPES = Object.values(MethodType).filter(
   (value) => typeof value === "number"
@@ -133,9 +133,7 @@ const CreateMethod: FC = () => {
           </Grid>
         </Grid>
       </form>
-      {createMethodError && (
-        <Alert severity="error">{createMethodError.message}</Alert>
-      )}
+      <ErrorHolder error={createMethodError} />
     </Box>
   );
 };

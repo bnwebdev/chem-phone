@@ -15,6 +15,7 @@ import {
 import { FC, useCallback, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useHistory } from "react-router";
+import ErrorHolder from "../../../common/components/ErrorHolder";
 import { useAllMethods } from "../../../method/graphql/queries";
 import { useCreateAnalysis } from "../../graphql/mutations";
 
@@ -123,11 +124,7 @@ const Create: FC = () => {
         >
           Create analysis
         </LoadingButton>
-        {createAnalysisError && (
-          <Typography color="error" variant="body1">
-            {createAnalysisError.message}
-          </Typography>
-        )}
+        <ErrorHolder error={createAnalysisError} />
       </Grid>
     </form>
   );

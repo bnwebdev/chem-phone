@@ -8,13 +8,13 @@ import {
   FormControl,
   Input,
   InputLabel,
-  Typography,
 } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router";
 import { useCreateAnalysis } from "../../../analysis/graphql/mutations";
+import ErrorHolder from "../../../common/components/ErrorHolder";
 import { MethodContext } from "../context";
 
 const columns: GridColDef[] = [
@@ -79,11 +79,7 @@ const CompletedMethod: FC<{ readable?: boolean }> = ({ readable }) => {
           Create analysis
         </LoadingButton>
       )}
-      {createAnalysisError && (
-        <Typography color={"error"} variant="body1">
-          {createAnalysisError.message}
-        </Typography>
-      )}
+      <ErrorHolder error={createAnalysisError} />
       <Dialog
         fullWidth
         open={createAnalysisOpen}
