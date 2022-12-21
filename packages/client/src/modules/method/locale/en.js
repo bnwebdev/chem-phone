@@ -25,6 +25,7 @@ const editPage = {
 };
 
 const localization = {
+  method: "Method",
   labels: {
     root: "Methods",
     create: "Create Method",

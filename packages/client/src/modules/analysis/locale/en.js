@@ -11,7 +11,43 @@ const createPage = {
   },
 };
 
+const editPage = {
+  columns: {
+    color: "Color",
+    result: "Result",
+    actions: "Actions",
+  },
+  actions: {
+    delete: "Delete",
+  },
+  computeBtn: "Compute",
+  computingBtn: "Computing...",
+  pickColorBtn: "Pick color",
+  pickColorTitle: "Pick color",
+  errors: {
+    colorRequired: `All fields of color are required`,
+  },
+  pickBtn: "Pick",
+  cancelBtn: "Cancel",
+};
+
+const listPage = {
+  columns: {
+    id: "Id",
+    name: "Name",
+    methodId: "Method Id",
+    createdAt: "Created At",
+    updatedAt: "Updated At",
+    status: "Status",
+    actions: "Actions",
+  },
+};
+
 const localization = {
+  analysis: {
+    whoami: "Analysis",
+    details: "Analysis details",
+  },
   labels: {
     root: "Analyses",
     create: "Create Analysis",
@@ -24,6 +60,8 @@ const localization = {
     [AnalysisStatus.ARCHIEVED]: "Archieved",
   },
   createPage,
+  editPage,
+  listPage,
 };
 
 export default localization;
