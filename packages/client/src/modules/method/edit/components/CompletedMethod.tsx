@@ -1,6 +1,7 @@
+import { useTranslation } from "@app/i18n";
+import { LoadingButton } from "@mui/lab";
 import {
   Button,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -8,20 +9,21 @@ import {
   FormControl,
   Input,
   InputLabel,
-  Typography,
 } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { i18n } from "i18next";
 import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router";
 import { useCreateAnalysis } from "../../../analysis/graphql/mutations";
+import ErrorHolder from "../../../common/components/ErrorHolder";
 import { MethodContext } from "../context";
 
-const columns: GridColDef[] = [
+const getColumns = (i18n: i18n): GridColDef[] => [
   {
     field: "concentration",
     renderCell: ({ value }) => `${value}`,
-    headerName: "Concentration",
+    headerName: i18n.t<string>("common:concentration"),
     type: "number",
     align: "center",
     headerAlign: "center",
@@ -30,7 +32,7 @@ const columns: GridColDef[] = [
   {
     field: "color",
     renderCell: ({ value }) => `rgba(${value.join(", ")})`,
-    headerName: "Color",
+    headerName: i18n.t<string>("common:color"),
     align: "center",
     headerAlign: "center",
     flex: 100,
@@ -39,6 +41,8 @@ const columns: GridColDef[] = [
 
 const CompletedMethod: FC<{ readable?: boolean }> = ({ readable }) => {
   const { method } = useContext(MethodContext);
+
+  const i18n = useTranslation("methods");
 
   const points = useMemo(
     () =>
@@ -71,22 +75,15 @@ const CompletedMethod: FC<{ readable?: boolean }> = ({ readable }) => {
   return (
     <>
       {!readable && (
-        <Button
+        <LoadingButton
           variant="contained"
-          disabled={createAnalysisLoading}
+          loading={createAnalysisLoading}
           onClick={() => setCreateAnalysisOpen(true)}
         >
-          {createAnalysisLoading && (
-            <CircularProgress size={20} color="inherit" />
-          )}
-          Create analysis
-        </Button>
+          {i18n.t<string>("editPage.createAnalysisBtn")}
+        </LoadingButton>
       )}
-      {createAnalysisError && (
-        <Typography color={"error"} variant="body1">
-          {createAnalysisError.message}
-        </Typography>
-      )}
+      <ErrorHolder error={createAnalysisError} />
       <Dialog
         fullWidth
         open={createAnalysisOpen}
@@ -102,20 +99,25 @@ const CompletedMethod: FC<{ readable?: boolean }> = ({ readable }) => {
           })}
         >
           <DialogTitle>
-            Create analysis for method {method.name}#{method.id}
+            {i18n.t<string>("editPage.createAnalysisForm.title", {
+              name: method.name,
+              id: method.id,
+            })}
           </DialogTitle>
           <DialogContent>
             <FormControl fullWidth margin="dense">
-              <InputLabel>Name</InputLabel>
+              <InputLabel>
+                {i18n.t<string>("editPage.createAnalysisForm.name.label")}
+              </InputLabel>
               <Input {...register("name", { required: true })} />
             </FormControl>
           </DialogContent>
           <DialogActions>
             <Button color="success" type="submit">
-              Create
+              {i18n.t<string>("editPage.createAnalysisForm.okLabel")}
             </Button>
             <Button color="info" onClick={() => setCreateAnalysisOpen(false)}>
-              Cancel
+              {i18n.t<string>("common:cancel")}
             </Button>
           </DialogActions>
         </form>
@@ -123,7 +125,7 @@ const CompletedMethod: FC<{ readable?: boolean }> = ({ readable }) => {
       <DataGrid
         autoHeight
         rows={points}
-        columns={columns}
+        columns={getColumns(i18n)}
         pageSize={10}
         rowsPerPageOptions={[10]}
         hideFooter

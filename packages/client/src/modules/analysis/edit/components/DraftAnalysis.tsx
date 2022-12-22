@@ -1,3 +1,5 @@
+import { useTranslation } from "@app/i18n";
+import { LoadingButton } from "@mui/lab";
 import {
   Button,
   Dialog,
@@ -5,11 +7,12 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  Typography,
 } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { i18n } from "i18next";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import ErrorHolder from "../../../common/components/ErrorHolder";
 import { ColorInput } from "../../../method/edit/components/PointPicker/inputs";
 import {
   useComputeAnalysisData,
@@ -36,12 +39,13 @@ const pickAnalysisData = (
 });
 
 const getColumns = (
+  i18n: i18n,
   getRemoveItemHandler: (id: number) => () => void
 ): GridColDef[] => [
   {
     field: "color",
     align: "center",
-    headerName: "Color",
+    headerName: i18n.t("common:color"),
     headerAlign: "center",
     renderCell: ({ value }) => <>rgba({value.join(",")})</>,
     flex: 3,
@@ -49,12 +53,12 @@ const getColumns = (
   {
     field: "actions",
     align: "center",
-    headerName: "Actions",
+    headerName: i18n.t("common:actions"),
     headerAlign: "center",
     renderCell: ({ row }) => (
       <>
         <Button color="error" onClick={getRemoveItemHandler(row.id)}>
-          Delete
+          {i18n.t("common:delete") as string}
         </Button>
       </>
     ),
@@ -63,11 +67,13 @@ const getColumns = (
 ];
 
 const DraftAnalysis = () => {
+  const i18n = useTranslation("analyses");
+
   const { analysis, refetch } = useContext(AnalysisContext);
+  const { id, data } = analysis;
 
   const [pickColorOpen, setPickColorOpen] = useState(false);
 
-  const { id, data } = analysis;
   const analysisData = useMemo(
     () => data.map((item) => ({ ...item, id: Math.random() })),
     [data]
@@ -116,7 +122,7 @@ const DraftAnalysis = () => {
     }
   }, [reset, pickColorOpen]);
 
-  const columns = getColumns((itemId: number) => async () => {
+  const columns = getColumns(i18n, (itemId: number) => async () => {
     await updateAnalysisData({
       id,
       data: [
@@ -129,20 +135,17 @@ const DraftAnalysis = () => {
   return (
     <>
       <Grid item>
-        {computeAnalysisDataError && (
-          <Typography variant="body1" color="error">
-            {computeAnalysisDataError.message}
-          </Typography>
-        )}
-        <Button
+        <ErrorHolder error={computeAnalysisDataError} />
+        <LoadingButton
           fullWidth
           variant="contained"
           color="success"
-          disabled={!data.length || computeAnalysisDataLoading}
           onClick={computeAnalysisDataHandler}
+          loading={computeAnalysisDataLoading}
+          loadingIndicator={i18n.t("editPage.computingBtn") as string}
         >
-          {computeAnalysisDataLoading ? "Computing..." : "Start computing"}
-        </Button>
+          {i18n.t("editPage.computeBtn") as string}
+        </LoadingButton>
       </Grid>
 
       <Grid item>
@@ -156,18 +159,14 @@ const DraftAnalysis = () => {
       </Grid>
 
       <Grid item>
-        {updateAnalysisDataError && (
-          <Typography variant="body1" color="error">
-            {updateAnalysisDataError.message}
-          </Typography>
-        )}
+        <ErrorHolder error={updateAnalysisDataError} />
         <Button
           variant="contained"
           fullWidth
           onClick={() => setPickColorOpen(true)}
           disabled={updateAnalysisDataLoading || computeAnalysisDataLoading}
         >
-          Pick color
+          {i18n.t("editPage.pickColorBtn") as string}
         </Button>
         <Dialog
           open={pickColorOpen}
@@ -175,14 +174,16 @@ const DraftAnalysis = () => {
           fullWidth
         >
           <form onSubmit={handleSubmit(onSubmit)}>
-            <DialogTitle>Pick color</DialogTitle>
+            <DialogTitle>
+              {i18n.t("editPage.pickColorTitle") as string}
+            </DialogTitle>
             <DialogContent>
               <Controller
                 name="color"
                 control={control}
                 rules={{
                   required: {
-                    message: "All fields of color is required",
+                    message: i18n.t("editPage.errors.colorRequired"),
                     value: true,
                   },
                   validate: (color) => {
@@ -194,16 +195,12 @@ const DraftAnalysis = () => {
                       return true;
                     }
 
-                    return `All fields of color is required!`;
+                    return i18n.t("editPage.errors.colorRequired") as string;
                   },
                 }}
                 render={({ field: { value }, fieldState: { error } }) => (
                   <>
-                    {error?.message && (
-                      <Typography variant="body1" color="error">
-                        {error.message}
-                      </Typography>
-                    )}
+                    {<ErrorHolder error={error} />}
                     <ColorInput
                       value={value}
                       onChange={(changedValue) =>
@@ -216,10 +213,10 @@ const DraftAnalysis = () => {
             </DialogContent>
             <DialogActions>
               <Button type="submit" color="success">
-                Pick
+                {i18n.t("editPage.pickBtn") as string}
               </Button>
               <Button color="info" onClick={() => setPickColorOpen(false)}>
-                Cancel
+                {i18n.t("editPage.cancelBtn") as string}
               </Button>
             </DialogActions>
           </form>

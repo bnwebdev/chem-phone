@@ -1,0 +1,18 @@
+{
+  "labels": {
+    "signIn": "Вхід",
+    "signUp": "Реєстрація",
+    "logout": "Вихід"
+  },
+  "signin": {
+    "username": "Ім'я користувача",
+    "password": "Пароль",
+    "submit": "Увійти"
+  },
+  "signup": {
+    "username": "Ім'я користувача",
+    "password": "Пароль",
+    "confirm": "Повторити пароль",
+    "submit": "Реєстрація"
+  }
+}

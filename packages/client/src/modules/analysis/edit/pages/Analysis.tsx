@@ -66,7 +66,7 @@ const Analysis: FC = () => {
         >
           <Grid item>
             <Typography variant="h2">
-              Analysis {name}#{id}
+              {i18n.t("analysis.whoami") as string} {name}#{id}
             </Typography>
           </Grid>
           <Grid item>
@@ -78,7 +78,7 @@ const Analysis: FC = () => {
         <Grid item>
           <Accordion>
             <AccordionSummary>
-              Method {methodData?.name}
+              {i18n.t("methods:method") as string} {methodData?.name}
               {methodData ? "#" : ""}
               {methodData?.id}
             </AccordionSummary>
@@ -92,7 +92,9 @@ const Analysis: FC = () => {
             </AccordionDetails>
           </Accordion>
           <Accordion>
-            <AccordionSummary>Analysis details</AccordionSummary>
+            <AccordionSummary>
+              {i18n.t("analysis.details") as string}
+            </AccordionSummary>
             <AccordionDetails>
               {(details || "-").split(`\n`).map((row, idx) => (
                 <Typography variant="body1" key={idx}>

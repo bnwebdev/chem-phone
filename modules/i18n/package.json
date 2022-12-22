@@ -6,7 +6,9 @@
   "directory": "modules/i18n",
   "dependencies": {
     "@app/module-common": "^1.0.0",
+    "@app/module-client": "^1.0.0",
+    "i18next": "^21.10.0",
     "react": "^18.2.0",
-    "i18next": "^21.10.0"
+    "react-use-cookie": "^1.4.0"
   }
 }

@@ -1,12 +1,10 @@
-import { FC, MouseEvent, useMemo, useState } from "react";
+import { FC, MouseEvent, useContext, useMemo, useState } from "react";
 
 import { NavItem } from "@app/module-client";
 
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   Divider,
-  Tooltip,
-  Avatar,
   Container,
   Menu,
   Typography,
@@ -14,12 +12,15 @@ import {
   Toolbar,
   Box,
   AppBar,
+  TextField,
+  MenuItem,
 } from "@mui/material";
 import AdbIcon from "@mui/icons-material/Adb";
 
 import AppNavLink from "./AppNavLink";
 import AppSideNavLink from "./AppSideNavLink";
 import { useAuth } from "../../../../packages/client/src/modules/auth/context/AuthProvider";
+import { TranslationContext } from "@app/i18n";
 
 type Props = {
   leftItems: NavItem[];
@@ -45,6 +46,17 @@ const normalizeNavItems = (
   return deepNormalized;
 };
 
+const languages = [
+  {
+    value: "en",
+    label: "English",
+  },
+  {
+    value: "ua",
+    label: "Українська",
+  },
+];
+
 const NavBar: FC<Props> = ({
   leftItems: rawLeftItems,
   rightItems: rawRightItems,
@@ -52,21 +64,13 @@ const NavBar: FC<Props> = ({
   const { identity } = useAuth();
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
   };
 
   const leftItems = useMemo(
@@ -77,6 +81,8 @@ const NavBar: FC<Props> = ({
     () => normalizeNavItems(rawRightItems, identity),
     [identity, rawRightItems]
   );
+
+  const { language, setLanguage } = useContext(TranslationContext);
 
   return (
     <AppBar position="static">
@@ -148,7 +154,7 @@ const NavBar: FC<Props> = ({
             variant="h5"
             noWrap
             component="a"
-            href=""
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -167,30 +173,18 @@ const NavBar: FC<Props> = ({
               <AppNavLink item={item} key={item.label + `${idx}`} />
             ))}
           </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            ></Menu>
-          </Box>
+          <TextField
+            select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            {...{ SelectProps: { style: { color: "white" } } }}
+          >
+            {languages.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
         </Toolbar>
       </Container>
     </AppBar>

@@ -1,20 +1,19 @@
+import { useTranslation } from "@app/i18n";
 import { MethodStatus } from "@app/method";
+import { LoadingButton } from "@mui/lab";
 import {
-  Button,
   CircularProgress,
   FormControl,
-  FormLabel,
   Grid,
-  Input,
-  InputLabel,
   MenuItem,
-  Select,
-  TextareaAutosize,
+  Stack,
+  TextField,
   Typography,
 } from "@mui/material";
 import { FC, useCallback, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useHistory } from "react-router";
+import ErrorHolder from "../../../common/components/ErrorHolder";
 import { useAllMethods } from "../../../method/graphql/queries";
 import { useCreateAnalysis } from "../../graphql/mutations";
 
@@ -26,6 +25,7 @@ type InputData = {
 
 const Create: FC = () => {
   const history = useHistory();
+  const i18n = useTranslation("analyses");
 
   const { createAnalysis, createAnalysisLoading, createAnalysisError } =
     useCreateAnalysis();
@@ -68,69 +68,78 @@ const Create: FC = () => {
   }
 
   if (allMethodsError) {
-    return (
-      <Typography variant="h2" color={"red"}>
-        {allMethodsError.message}
-      </Typography>
-    );
+    return <ErrorHolder error={allMethodsError} />;
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Grid container direction={"column"} gap={3}>
-        <h1>Create Analysis</h1>
+      <Stack spacing={3} mt={3}>
+        <Typography variant="h3">
+          {i18n.t("createPage.header") as string}
+        </Typography>
+
         <FormControl fullWidth>
-          <InputLabel>Select method</InputLabel>
           <Controller
             control={control}
             name={"methodId"}
             rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
-              <Select value={value} onChange={onChange} required>
+              <TextField
+                label={i18n.t("createPage.form.selectMethod") as string}
+                value={value}
+                onChange={onChange}
+                required
+                select
+              >
                 {selectItems?.map(({ id, name }) => (
                   <MenuItem key={id} value={id}>
                     {name}#{id}
                   </MenuItem>
                 ))}
-              </Select>
+              </TextField>
             )}
           />
         </FormControl>
+
         <FormControl fullWidth>
-          <InputLabel>Analysis name</InputLabel>
-          <Input {...register("name", { required: true })} />
+          <TextField
+            required
+            label={i18n.t("createPage.form.name") as string}
+            {...register("name", { required: true })}
+          />
         </FormControl>
+
         <FormControl fullWidth>
-          <FormLabel>Analysis details</FormLabel>
           <Controller
             control={control}
             name={"details"}
             render={({ field: { onChange, value } }) => (
-              <TextareaAutosize
+              <TextField
+                label={i18n.t("createPage.form.details") as string}
+                multiline
                 onChange={onChange}
                 value={value}
                 minRows={2}
                 maxRows={10}
-              ></TextareaAutosize>
+                placeholder={
+                  i18n.t("createPage.form.detailsPlaceholder") as string
+                }
+              />
             )}
           ></Controller>
         </FormControl>
-        <Button
-          type="submit"
+
+        <ErrorHolder error={createAnalysisError} />
+
+        <LoadingButton
           variant="contained"
-          disabled={!selectItems?.length || createAnalysisLoading}
+          type="submit"
+          loading={createAnalysisLoading}
+          disabled={!selectItems?.length}
         >
-          {createAnalysisLoading && (
-            <CircularProgress color="inherit" size={20} />
-          )}
-          Create analysis
-        </Button>
-        {createAnalysisError && (
-          <Typography color="error" variant="body1">
-            {createAnalysisError.message}
-          </Typography>
-        )}
-      </Grid>
+          {i18n.t("createPage.form.submit") as string}
+        </LoadingButton>
+      </Stack>
     </form>
   );
 };

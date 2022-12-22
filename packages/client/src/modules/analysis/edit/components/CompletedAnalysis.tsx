@@ -1,6 +1,8 @@
+import { useTranslation } from "@app/i18n";
 import { MethodType } from "@app/method";
 import { Grid, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { i18n } from "i18next";
 import { useContext, useMemo } from "react";
 import { MethodContext } from "../../../method/edit/context";
 import { Method } from "../../../method/graphql/types";
@@ -9,11 +11,11 @@ import { AnalysisContext } from "../context/AnalysisProvider";
 const round = (value: number, presition: number) =>
   Math.round(value * Math.pow(10, presition)) / Math.pow(10, presition);
 
-const getColumns = (method: Method): GridColDef[] => [
+const getColumns = (i18n: i18n, method: Method): GridColDef[] => [
   {
     field: "color",
     align: "center",
-    headerName: "Color",
+    headerName: i18n.t("common:color"),
     headerAlign: "center",
     renderCell: ({ value }) => <>rgba({value.join(",")})</>,
     flex: 1,
@@ -21,7 +23,7 @@ const getColumns = (method: Method): GridColDef[] => [
   {
     field: "result",
     align: "center",
-    headerName: "Result",
+    headerName: i18n.t("editPage.columns.result"),
     headerAlign: "center",
     renderCell: ({ value }) => {
       const data: Record<string, number> = JSON.parse(value);
@@ -71,6 +73,8 @@ const CompletedAnalysis = () => {
   const { analysis } = useContext(AnalysisContext);
   const { method } = useContext(MethodContext);
 
+  const i18n = useTranslation("analyses");
+
   const rows = useMemo(
     () =>
       analysis.data.map(({ result, color, raw, resultUnit }) => ({
@@ -83,7 +87,7 @@ const CompletedAnalysis = () => {
     [analysis]
   );
 
-  const columns = getColumns(method);
+  const columns = getColumns(i18n, method);
 
   return (
     <DataGrid

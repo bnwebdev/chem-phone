@@ -7,12 +7,14 @@ import auth from "./auth";
 import method from "./method";
 import home from "./home";
 import analysis from "./analysis";
+import common from "./common";
 
 export default new ClientModule(
   method,
   analysis,
   home,
   auth,
+  common,
   core,
   i18n,
   notFoundPage
