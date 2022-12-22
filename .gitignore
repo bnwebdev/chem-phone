@@ -1,2 +1,17 @@
-node_modules/
-.env
+# Code editors
+/.idea
+/.yarn
+/.cache
+/.vscode
+/.history
+
+# Directories
+node_modules
+docker-database-data
+
+# Files
+.npmrc
+
+# Type of files
+*.env
+*.dump

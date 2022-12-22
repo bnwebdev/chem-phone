@@ -1,0 +1,40 @@
+version: "3"
+services:
+    chem-phone-db:
+        container_name: chem-phone-db
+        image: postgres:12-alpine
+        restart: always
+        environment:
+            - POSTGRES_PASSWORD=password
+            - POSTGRES_DB=postgres
+            - POSTGRES_USER=postgres
+        ports:
+            - "5432:5432"
+        volumes:
+          - ./docker-database-data:/var/lib/postgresql/data
+    chem-phone-app:
+        container_name: chem-phone-app
+        build: ./
+        restart: always
+        ports:
+            - "3001:3001"
+            - "3000:3000"
+        command: 'npm run dev'
+        depends_on:
+            - chem-phone-db
+            - cache
+        links:
+            - chem-phone-db
+        environment:
+            - DATABASE_HOST=chem-phone-db
+        volumes:
+            - ./:/home/app
+            - /home/app/node_modules
+            - /home/app/packages/client/node_modules
+            - /home/app/packages/server/node_modules
+    cache:
+        container_name: redis
+        image: redis:7-alpine
+        restart: always
+        ports:
+            - "6379:6379"
