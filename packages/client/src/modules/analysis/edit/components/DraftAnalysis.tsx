@@ -58,7 +58,7 @@ const getColumns = (
     renderCell: ({ row }) => (
       <>
         <Button color="error" onClick={getRemoveItemHandler(row.id)}>
-          {i18n.t("editPage.actions.delete") as string}
+          {i18n.t("common:delete") as string}
         </Button>
       </>
     ),

@@ -22,6 +22,9 @@ import { i18n } from "i18next";
 
 const Actions: FC<{ id: number; refetch: () => void }> = ({ id, refetch }) => {
   const [open, setOpen] = useState(false);
+
+  const i18n = useTranslation("methods");
+
   const { archieveMethod, archieveMethodLoading, archieveMethodCalled } =
     useArchieveMethod(useMemo(() => ({ id }), [id]));
 
@@ -37,12 +40,16 @@ const Actions: FC<{ id: number; refetch: () => void }> = ({ id, refetch }) => {
         onClick={() => setOpen(true)}
         loading={archieveMethodLoading}
       >
-        Delete
+        {i18n.t<string>("common:delete")}
       </LoadingButton>
       <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Remove method #{id}</DialogTitle>
+        <DialogTitle>
+          {i18n.t<string>("listPage.deleteForm.title", { id })}
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText>Are you sure?</DialogContentText>
+          <DialogContentText>
+            {i18n.t<string>("listPage.deleteForm.sureQuestion", { id })}
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button
@@ -52,10 +59,10 @@ const Actions: FC<{ id: number; refetch: () => void }> = ({ id, refetch }) => {
               setOpen(false);
             }}
           >
-            Delete
+            {i18n.t<string>("common:delete")}
           </Button>
           <Button color="warning" onClick={() => setOpen(false)}>
-            Cancel
+            {i18n.t<string>("common:cancel")}
           </Button>
         </DialogActions>
       </Dialog>

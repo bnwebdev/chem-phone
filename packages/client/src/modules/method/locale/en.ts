@@ -39,7 +39,12 @@ const editPage = {
   },
 };
 
-const listPage = {};
+const listPage = {
+  deleteForm: {
+    title: "Delete method with id #{{id}}",
+    sureQuestion: "Are you sure?",
+  },
+};
 
 const localization = {
   method: "Method",

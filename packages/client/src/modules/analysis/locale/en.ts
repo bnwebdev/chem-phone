@@ -15,9 +15,6 @@ const editPage = {
   columns: {
     result: "Result",
   },
-  actions: {
-    delete: "Delete",
-  },
   computeBtn: "Compute",
   computingBtn: "Computing...",
   pickColorBtn: "Pick color",
