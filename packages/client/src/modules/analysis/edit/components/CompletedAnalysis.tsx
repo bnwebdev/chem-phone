@@ -15,7 +15,7 @@ const getColumns = (i18n: i18n, method: Method): GridColDef[] => [
   {
     field: "color",
     align: "center",
-    headerName: i18n.t("editPage.columns.color"),
+    headerName: i18n.t("common:color"),
     headerAlign: "center",
     renderCell: ({ value }) => <>rgba({value.join(",")})</>,
     flex: 1,

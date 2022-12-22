@@ -26,7 +26,7 @@ const Actions: FC<any> = () => null;
 const getColumns = (i18n: i18n, refetchAll: () => void): GridColDef[] => [
   {
     field: "id",
-    headerName: i18n.t("listPage.columns.id"),
+    headerName: i18n.t("common:id"),
     align: "center",
     headerAlign: "center",
     renderCell: ({ value }) => <Link to={`/analysis/${value}`}>#{value}</Link>,
@@ -34,7 +34,7 @@ const getColumns = (i18n: i18n, refetchAll: () => void): GridColDef[] => [
   },
   {
     field: "name",
-    headerName: i18n.t("listPage.columns.name"),
+    headerName: i18n.t("common:name"),
     align: "center",
     headerAlign: "center",
     flex: 2,
@@ -49,7 +49,7 @@ const getColumns = (i18n: i18n, refetchAll: () => void): GridColDef[] => [
   },
   {
     field: "createdAt",
-    headerName: i18n.t("listPage.columns.createdAt"),
+    headerName: i18n.t("common:createdAt"),
     flex: 4,
     type: "dateTime",
     align: "center",
@@ -57,7 +57,7 @@ const getColumns = (i18n: i18n, refetchAll: () => void): GridColDef[] => [
   },
   {
     field: "updatedAt",
-    headerName: i18n.t("listPage.columns.updatedAt"),
+    headerName: i18n.t("common:updatedAt"),
     flex: 4,
     type: "dateTime",
     align: "center",
@@ -65,7 +65,7 @@ const getColumns = (i18n: i18n, refetchAll: () => void): GridColDef[] => [
   },
   {
     field: "status",
-    headerName: i18n.t("listPage.columns.status"),
+    headerName: i18n.t("common:status"),
     align: "center",
     headerAlign: "center",
     renderCell: ({ value }) => i18n.t(`status.${value}`) as string,
@@ -73,7 +73,7 @@ const getColumns = (i18n: i18n, refetchAll: () => void): GridColDef[] => [
   },
   {
     field: "actions",
-    headerName: i18n.t("listPage.columns.actions"),
+    headerName: i18n.t("common:actions"),
     align: "center",
     headerAlign: "center",
     flex: 3,

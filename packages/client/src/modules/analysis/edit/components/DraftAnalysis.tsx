@@ -45,7 +45,7 @@ const getColumns = (
   {
     field: "color",
     align: "center",
-    headerName: i18n.t("editPage.columns.color"),
+    headerName: i18n.t("common:color"),
     headerAlign: "center",
     renderCell: ({ value }) => <>rgba({value.join(",")})</>,
     flex: 3,
@@ -53,7 +53,7 @@ const getColumns = (
   {
     field: "actions",
     align: "center",
-    headerName: i18n.t("editPage.columns.actions"),
+    headerName: i18n.t("common:actions"),
     headerAlign: "center",
     renderCell: ({ row }) => (
       <>

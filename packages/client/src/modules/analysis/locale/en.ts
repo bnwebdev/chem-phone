@@ -13,9 +13,7 @@ const createPage = {
 
 const editPage = {
   columns: {
-    color: "Color",
     result: "Result",
-    actions: "Actions",
   },
   actions: {
     delete: "Delete",
@@ -33,13 +31,7 @@ const editPage = {
 
 const listPage = {
   columns: {
-    id: "Id",
-    name: "Name",
     methodId: "Method Id",
-    createdAt: "Created At",
-    updatedAt: "Updated At",
-    status: "Status",
-    actions: "Actions",
   },
 };
 
