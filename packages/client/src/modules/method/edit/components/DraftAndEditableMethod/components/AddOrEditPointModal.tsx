@@ -1,3 +1,4 @@
+import { useTranslation } from "@app/i18n";
 import { FC, useState } from "react";
 import { Inputs, PointPickerModal } from "../../PointPicker";
 
@@ -14,6 +15,8 @@ type Props = {
   Button: FC<{ onClick: () => void }>;
   point: Partial<Point> | undefined;
   onChange: (point: Partial<Point> | undefined) => void;
+  title: string;
+  okLabel: string;
 };
 
 const AddOrEditPointModal: FC<Props> = ({
@@ -21,15 +24,19 @@ const AddOrEditPointModal: FC<Props> = ({
   Button,
   point,
   onChange,
+  title,
+  okLabel,
 }) => {
+  const i18n = useTranslation("methods");
+
   const [open, setOpen] = useState(false);
 
   const hideModal = () => setOpen(false);
 
   return (
     <PointPickerModal
-      title="Add new point"
-      okLabel="Add point"
+      title={title}
+      okLabel={okLabel}
       open={open}
       cancelHandler={hideModal}
       submitHandler={(e) => {
@@ -40,8 +47,8 @@ const AddOrEditPointModal: FC<Props> = ({
       pointPickerProps={{
         X: Inputs.NumberInput,
         Y: Inputs.ColorInput,
-        xLabel: "Concentration",
-        yLabel: "Color",
+        xLabel: i18n.t("common:concentration"),
+        yLabel: i18n.t("common:color"),
         onChange,
         value: point,
       }}

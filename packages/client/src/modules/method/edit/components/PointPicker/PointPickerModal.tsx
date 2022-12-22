@@ -1,3 +1,4 @@
+import { useTranslation } from "@app/i18n";
 import {
   Button,
   Dialog,
@@ -27,6 +28,8 @@ const PointPickerModal: FC<Props> = ({
   pointPickerProps,
   button,
 }) => {
+  const i18n = useTranslation("common");
+
   return (
     <>
       {button}
@@ -38,7 +41,9 @@ const PointPickerModal: FC<Props> = ({
           </DialogContent>
           <DialogActions>
             <Button type="submit">{okLabel}</Button>
-            <Button onClick={cancelHandler}>Cancel</Button>
+            <Button onClick={cancelHandler}>
+              {i18n.t("cancel") as string}
+            </Button>
           </DialogActions>
         </form>
       </Dialog>

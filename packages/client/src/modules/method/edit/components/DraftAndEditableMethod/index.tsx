@@ -1,6 +1,9 @@
+import { useTranslation } from "@app/i18n";
 import { MethodStatus } from "@app/method";
+import { LoadingButton } from "@mui/lab";
 import { Typography, Button } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { i18n } from "i18next";
 import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useCompleteMethod, useEditMethod } from "../../../graphql/mutations";
 import { MethodContext } from "../../context";
@@ -10,13 +13,19 @@ type GetColumnsProps = {
   changePointHandler: (id: number) => void;
   deletePointHandler: (id: number) => void;
   actionsDisabled?: boolean;
+  i18n: i18n;
 };
 
-const getColumns = (props: GetColumnsProps): GridColDef[] => [
+const getColumns = ({
+  i18n,
+  deletePointHandler,
+  changePointHandler,
+  actionsDisabled,
+}: GetColumnsProps): GridColDef[] => [
   {
     field: "concentration",
     renderCell: ({ value }) => `${value}`,
-    headerName: "Concentration",
+    headerName: i18n.t("common:concentration"),
     type: "number",
     align: "center",
     headerAlign: "center",
@@ -25,7 +34,7 @@ const getColumns = (props: GetColumnsProps): GridColDef[] => [
   {
     field: "color",
     renderCell: ({ value }) => `rgba(${value.join(", ")})`,
-    headerName: "Color",
+    headerName: i18n.t("common:color"),
     align: "center",
     headerAlign: "center",
     flex: 100,
@@ -36,21 +45,21 @@ const getColumns = (props: GetColumnsProps): GridColDef[] => [
       <>
         <Button
           color="warning"
-          onClick={() => props.changePointHandler(row.id)}
-          disabled={props.actionsDisabled}
+          onClick={() => changePointHandler(row.id)}
+          disabled={actionsDisabled}
         >
-          Edit
+          {i18n.t("common:edit") as string}
         </Button>
         <Button
           color="error"
-          onClick={() => props.deletePointHandler(row.id)}
-          disabled={props.actionsDisabled}
+          onClick={() => deletePointHandler(row.id)}
+          disabled={actionsDisabled}
         >
-          Delete
+          {i18n.t("common:delete") as string}
         </Button>
       </>
     ),
-    headerName: "Actions",
+    headerName: i18n.t("common:actions"),
     align: "center",
     headerAlign: "center",
     flex: 100,
@@ -59,6 +68,8 @@ const getColumns = (props: GetColumnsProps): GridColDef[] => [
 
 const DraftAndEditableMethod: FC = () => {
   const { method, refetch } = useContext(MethodContext);
+
+  const i18n = useTranslation("methods");
 
   const { editMethod } = useEditMethod();
   const { completeMethod, completeMethodLoading } = useCompleteMethod(
@@ -102,13 +113,25 @@ const DraftAndEditableMethod: FC = () => {
     <>
       {method.description && (
         <Typography variant="body1">
-          Description: {method.description}
+          {i18n.t("common:description") as string}: {method.description}
         </Typography>
+      )}
+      {method.status === MethodStatus.EDITABLE && (
+        <LoadingButton
+          variant="contained"
+          color="success"
+          onClick={completeMethodHandler}
+          loading={completeMethodLoading}
+          loadingIndicator={i18n.t("editPage.completing") as string}
+        >
+          {i18n.t("editPage.completeBtn") as string}
+        </LoadingButton>
       )}
       <DataGrid
         autoHeight
         rows={points}
         columns={getColumns({
+          i18n,
           actionsDisabled: completeMethodLoading,
           changePointHandler: (id) => {
             if (pointToChangeId === id) {
@@ -143,6 +166,8 @@ const DraftAndEditableMethod: FC = () => {
       />
 
       <AddOrEditPointModal
+        okLabel={i18n.t("editPage.editPointForm.okLabel") as string}
+        title={i18n.t("editPage.editPointForm.title") as string}
         Button={({ onClick }) => {
           showEditRef.current = onClick;
 
@@ -181,15 +206,18 @@ const DraftAndEditableMethod: FC = () => {
         onChange={setEditedPoint}
       />
       <AddOrEditPointModal
+        okLabel={i18n.t("editPage.addPointForm.okLabel") as string}
+        title={i18n.t("editPage.addPointForm.title") as string}
         Button={({ onClick }) => (
           <Button
+            variant="contained"
             onClick={() => {
               setCreatedPoint(undefined);
               onClick();
             }}
             disabled={completeMethodLoading}
           >
-            Add point
+            {i18n.t("editPage.addPointForm.openFormBtn") as string}
           </Button>
         )}
         submitHandler={async (point, hideModal) => {
@@ -226,18 +254,6 @@ const DraftAndEditableMethod: FC = () => {
         point={createdPoint}
         onChange={setCreatedPoint}
       />
-      {method.status === MethodStatus.EDITABLE && (
-        <Button
-          variant="outlined"
-          color="success"
-          onClick={completeMethodHandler}
-          disabled={completeMethodLoading}
-        >
-          {completeMethodLoading
-            ? "Completing..."
-            : "Complete (you will not be able to undo this action)"}
-        </Button>
-      )}
     </>
   );
 };

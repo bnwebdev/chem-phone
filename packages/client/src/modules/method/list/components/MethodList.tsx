@@ -5,7 +5,6 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import {
   Box,
   Button,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,6 +18,7 @@ import { useTranslation } from "@app/i18n";
 import { useAllMethods } from "../../graphql/queries";
 import { useArchieveMethod } from "../../graphql/mutations";
 import { LoadingButton } from "@mui/lab";
+import { i18n } from "i18next";
 
 const Actions: FC<{ id: number; refetch: () => void }> = ({ id, refetch }) => {
   const [open, setOpen] = useState(false);
@@ -63,13 +63,10 @@ const Actions: FC<{ id: number; refetch: () => void }> = ({ id, refetch }) => {
   );
 };
 
-const columns = (
-  i18n: ReturnType<typeof useTranslation>,
-  refetchAll: () => void
-): GridColDef[] => [
+const getColumns = (i18n: i18n, refetchAll: () => void): GridColDef[] => [
   {
     field: "id",
-    headerName: "Id",
+    headerName: i18n.t("common:id"),
     align: "center",
     headerAlign: "center",
     renderCell: ({ value }) => <Link to={`/method/${value}`}>#{value}</Link>,
@@ -77,14 +74,14 @@ const columns = (
   },
   {
     field: "name",
-    headerName: "Name",
+    headerName: i18n.t("common:name"),
     align: "center",
     headerAlign: "center",
     flex: 2,
   },
   {
     field: "createdAt",
-    headerName: "Created At",
+    headerName: i18n.t("common:createdAt"),
     flex: 4,
     type: "dateTime",
     align: "center",
@@ -92,7 +89,7 @@ const columns = (
   },
   {
     field: "updatedAt",
-    headerName: "Updated At",
+    headerName: i18n.t("common:updatedAt"),
     flex: 4,
     type: "dateTime",
     align: "center",
@@ -100,7 +97,7 @@ const columns = (
   },
   {
     field: "status",
-    headerName: "Status",
+    headerName: i18n.t("common:status"),
     align: "center",
     headerAlign: "center",
     renderCell: ({ value }) => i18n.t(`status.${value}`) as string,
@@ -108,7 +105,7 @@ const columns = (
   },
   {
     field: "",
-    headerName: "Actions",
+    headerName: i18n.t("common:actions"),
     align: "center",
     headerAlign: "center",
     flex: 3,
@@ -147,7 +144,7 @@ const MethodList: FC = () => {
       <DataGrid
         autoHeight
         rows={allMethodsData || []}
-        columns={columns(i18n, allMethodRefetch)}
+        columns={getColumns(i18n, allMethodRefetch)}
         pageSize={10}
         rowsPerPageOptions={[10]}
         loading={allMethodsLoading}

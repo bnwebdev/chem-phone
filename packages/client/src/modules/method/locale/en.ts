@@ -18,11 +18,28 @@ const createPage = {
 };
 
 const editPage = {
-  chooseCurveBuilder: "Choose curve builder and create calibration curve",
-  curveBuilder: {
-    rawData: "Use raw data",
+  completing: "Completing...",
+  completeBtn: "Complete (you will not be able to undo this action)",
+  createAnalysisBtn: "Create analysis",
+  addPointForm: {
+    okLabel: "Edit point",
+    title: "Add point",
+    openFormBtn: "Add new point",
+  },
+  editPointForm: {
+    okLabel: "Update point",
+    title: "Edit point",
+  },
+  createAnalysisForm: {
+    okLabel: "Create",
+    title: 'Create analysis for method "{{name}}"#{{id}}',
+    name: {
+      label: "Analysis name",
+    },
   },
 };
+
+const listPage = {};
 
 const localization = {
   method: "Method",
@@ -46,6 +63,7 @@ const localization = {
   },
   createPage,
   editPage,
+  listPage,
 };
 
 export default localization;
