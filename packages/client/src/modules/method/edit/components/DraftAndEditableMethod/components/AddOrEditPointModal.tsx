@@ -44,14 +44,30 @@ const AddOrEditPointModal: FC<Props> = ({
         submitHandler(point, hideModal);
       }}
       button={<Button onClick={() => setOpen(true)} />}
-      pointPickerProps={{
-        X: Inputs.NumberInput,
-        Y: Inputs.ColorInput,
-        xLabel: i18n.t("common:concentration"),
-        yLabel: i18n.t("common:color"),
-        onChange,
-        value: point,
-      }}
+      pointPickerProps={[
+        {
+          name: i18n.t("common:colorInputForm.mods.colorPalete"),
+          props: {
+            X: Inputs.NumberInput,
+            Y: Inputs.ColorInput,
+            xLabel: i18n.t("common:concentration"),
+            yLabel: i18n.t("common:color"),
+            onChange,
+            value: point,
+          },
+        },
+        {
+          name: i18n.t("common:colorInputForm.mods.colorFromImage"),
+          props: {
+            X: Inputs.NumberInput,
+            Y: Inputs.ImageColorInput,
+            xLabel: i18n.t("common:concentration"),
+            yLabel: i18n.t("common:color"),
+            onChange,
+            value: point,
+          },
+        },
+      ]}
     />
   );
 };
