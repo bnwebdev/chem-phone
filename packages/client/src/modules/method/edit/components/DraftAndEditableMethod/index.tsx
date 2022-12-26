@@ -1,10 +1,11 @@
 import { useTranslation } from "@app/i18n";
 import { MethodStatus } from "@app/method";
 import { LoadingButton } from "@mui/lab";
-import { Typography, Button } from "@mui/material";
+import { Typography, Button, Box } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { i18n } from "i18next";
 import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
+import ColorBoxView from "../../../../common/components/ColorBoxView";
 import { useCompleteMethod, useEditMethod } from "../../../graphql/mutations";
 import { MethodContext } from "../../context";
 import AddOrEditPointModal from "./components/AddOrEditPointModal";
@@ -33,7 +34,7 @@ const getColumns = ({
   },
   {
     field: "color",
-    renderCell: ({ value }) => `rgba(${value.join(", ")})`,
+    renderCell: ({ value }) => <ColorBoxView color={value} />,
     headerName: i18n.t("common:color"),
     align: "center",
     headerAlign: "center",
