@@ -1,6 +1,7 @@
 import { useTranslation } from "@app/i18n";
 import { LoadingButton } from "@mui/lab";
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -16,8 +17,13 @@ import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router";
 import { useCreateAnalysis } from "../../../analysis/graphql/mutations";
+import ColorBoxView from "../../../common/components/ColorBoxView";
 import ErrorHolder from "../../../common/components/ErrorHolder";
 import { MethodContext } from "../context";
+
+const Cell = ({ value }: any) => {
+  return <ColorBoxView color={value} />;
+};
 
 const getColumns = (i18n: i18n): GridColDef[] => [
   {
@@ -31,7 +37,9 @@ const getColumns = (i18n: i18n): GridColDef[] => [
   },
   {
     field: "color",
-    renderCell: ({ value }) => `rgba(${value.join(", ")})`,
+    renderCell: ({ value }) => {
+      return <Cell value={value} />;
+    },
     headerName: i18n.t<string>("common:color"),
     align: "center",
     headerAlign: "center",

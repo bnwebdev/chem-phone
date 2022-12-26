@@ -4,6 +4,7 @@ import { Grid, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { i18n } from "i18next";
 import { useContext, useMemo } from "react";
+import ColorBoxView from "../../../common/components/ColorBoxView";
 import { MethodContext } from "../../../method/edit/context";
 import { Method } from "../../../method/graphql/types";
 import { AnalysisContext } from "../context/AnalysisProvider";
@@ -17,7 +18,7 @@ const getColumns = (i18n: i18n, method: Method): GridColDef[] => [
     align: "center",
     headerName: i18n.t("common:color"),
     headerAlign: "center",
-    renderCell: ({ value }) => <>rgba({value.join(",")})</>,
+    renderCell: ({ value }) => <ColorBoxView color={value} />,
     flex: 1,
   },
   {
@@ -29,12 +30,14 @@ const getColumns = (i18n: i18n, method: Method): GridColDef[] => [
       const data: Record<string, number> = JSON.parse(value);
 
       if (method.type === MethodType.CALIBRATION_CURVE_ABSOLUTE) {
-        const maxConcentration = Math.max(
-          ...method.data.curve.map(({ concentration }) => concentration)
+        const curveConcentrations = method.data.curve.map(
+          ({ concentration }) => concentration
         );
+        const maxConcentration = Math.max(...curveConcentrations);
+
         return (
           <Typography variant="body2" color="teal">
-            {round(data.concentration * maxConcentration, 4)}
+            {round(data.concentration * maxConcentration, 8)}
           </Typography>
         );
       }

@@ -3,6 +3,15 @@ const localization = {
   edit: "Edit",
   delete: "Delete",
 
+  colorInputForm: {
+    inputMode: "Input mode",
+    mods: {
+      colorPalete: "Color palete",
+      colorFromImage: "Pick color from image",
+    },
+    chooseImage: "Choose image",
+  },
+
   concentration: "Concentration",
   color: "Color",
   actions: "Actions",

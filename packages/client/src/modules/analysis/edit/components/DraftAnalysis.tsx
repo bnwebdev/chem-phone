@@ -1,6 +1,7 @@
 import { useTranslation } from "@app/i18n";
 import { LoadingButton } from "@mui/lab";
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -12,6 +13,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { i18n } from "i18next";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import ColorBoxView from "../../../common/components/ColorBoxView";
 import ErrorHolder from "../../../common/components/ErrorHolder";
 import { ColorInput } from "../../../method/edit/components/PointPicker/inputs";
 import {
@@ -47,7 +49,7 @@ const getColumns = (
     align: "center",
     headerName: i18n.t("common:color"),
     headerAlign: "center",
-    renderCell: ({ value }) => <>rgba({value.join(",")})</>,
+    renderCell: ({ value }) => <ColorBoxView color={value} />,
     flex: 3,
   },
   {
