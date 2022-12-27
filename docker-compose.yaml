@@ -11,7 +11,13 @@ services:
         ports:
             - "5432:5432"
         volumes:
-          - ./docker-database-data:/var/lib/postgresql/data
+            - ./docker-database-data:/var/lib/postgresql/data
+    cache:
+        container_name: redis
+        image: redis:7-alpine
+        restart: always
+        ports:
+            - "6379:6379"
     chem-phone-app:
         container_name: chem-phone-app
         build: ./
@@ -32,9 +38,3 @@ services:
             - /home/app/node_modules
             - /home/app/packages/client/node_modules
             - /home/app/packages/server/node_modules
-    cache:
-        container_name: redis
-        image: redis:7-alpine
-        restart: always
-        ports:
-            - "6379:6379"
