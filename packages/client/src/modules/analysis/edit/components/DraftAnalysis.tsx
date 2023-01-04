@@ -1,30 +1,21 @@
 import { useTranslation } from "@app/i18n";
 import { LoadingButton } from "@mui/lab";
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Grid,
-} from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { i18n } from "i18next";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import ColorBoxView from "../../../common/components/ColorBoxView";
 import ErrorHolder from "../../../common/components/ErrorHolder";
-import { ColorInput } from "../../../method/edit/components/PointPicker/inputs";
 import {
   useComputeAnalysisData,
   useUpdateAnalysisData,
 } from "../../graphql/mutations";
 import { AnalysisData } from "../../graphql/types";
 import { AnalysisContext } from "../context/AnalysisProvider";
+import AddColorModal from "./AddColorModal";
 
-type MaybeNumber = number | undefined;
-type Color = [MaybeNumber, MaybeNumber, MaybeNumber, MaybeNumber];
+type Color = [number, number, number, number];
 
 type InputData = {
   color: Color;
@@ -81,8 +72,11 @@ const DraftAnalysis = () => {
     [data]
   );
 
-  const { handleSubmit, control, setValue, reset } = useForm<InputData>();
-
+  const { handleSubmit, setValue, reset, watch } = useForm<InputData>({
+    defaultValues: {
+      color: [255, 255, 255, 1],
+    },
+  });
   const {
     updateAnalysisData,
     updateAnalysisDataError,
@@ -109,7 +103,7 @@ const DraftAnalysis = () => {
         id,
         data: [
           ...data.map(pickAnalysisData),
-          { color: value.color as any, raw: value.raw },
+          { color: value.color, raw: value.raw },
         ],
       });
 
@@ -162,67 +156,28 @@ const DraftAnalysis = () => {
 
       <Grid item>
         <ErrorHolder error={updateAnalysisDataError} />
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={() => setPickColorOpen(true)}
-          disabled={updateAnalysisDataLoading || computeAnalysisDataLoading}
-        >
-          {i18n.t("editPage.pickColorBtn") as string}
-        </Button>
-        <Dialog
-          open={pickColorOpen}
-          onClose={() => setPickColorOpen(false)}
-          fullWidth
-        >
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <DialogTitle>
-              {i18n.t("editPage.pickColorTitle") as string}
-            </DialogTitle>
-            <DialogContent>
-              <Controller
-                name="color"
-                control={control}
-                rules={{
-                  required: {
-                    message: i18n.t("editPage.errors.colorRequired"),
-                    value: true,
-                  },
-                  validate: (color) => {
-                    if (
-                      color instanceof Array &&
-                      color.length === 4 &&
-                      color.every((v) => typeof v === "number")
-                    ) {
-                      return true;
-                    }
-
-                    return i18n.t("editPage.errors.colorRequired") as string;
-                  },
-                }}
-                render={({ field: { value }, fieldState: { error } }) => (
-                  <>
-                    {<ErrorHolder error={error} />}
-                    <ColorInput
-                      value={value}
-                      onChange={(changedValue) =>
-                        setValue("color", changedValue)
-                      }
-                    />
-                  </>
-                )}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button type="submit" color="success">
-                {i18n.t("editPage.pickBtn") as string}
-              </Button>
-              <Button color="info" onClick={() => setPickColorOpen(false)}>
-                {i18n.t("editPage.cancelBtn") as string}
-              </Button>
-            </DialogActions>
-          </form>
-        </Dialog>
+        <AddColorModal
+          okLabel={i18n.t<string>("editPage.pickBtn")}
+          onChange={(colorValue) => {
+            setValue("color", colorValue || [255, 255, 255, 1]);
+          }}
+          submitHandler={(_, hideModal) => {
+            handleSubmit(onSubmit)();
+            hideModal();
+          }}
+          color={watch("color")}
+          title={i18n.t<string>("editPage.pickColorTitle")}
+          Button={({ onClick }) => (
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={onClick}
+              disabled={updateAnalysisDataLoading || computeAnalysisDataLoading}
+            >
+              {i18n.t("editPage.pickColorBtn") as string}
+            </Button>
+          )}
+        />
       </Grid>
     </>
   );
